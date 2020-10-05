@@ -1,21 +1,26 @@
 import React from 'react'
 import MqttConnectDialog from 'components/dialogs/MqttConnectDialog';
 import MqttSubscribeDialog from 'components/dialogs/MqttSubscribeDialog';
+import MqttPublishDialog from 'components/dialogs/MqttPublishDialog';
 
 export default function DialogWrapper(props) {
     const {
         open,
-        onChange
+        openDialogs
     } = props;
     return (
         <>
             <MqttConnectDialog 
                 open={open.openConnectDialog}
-                onChange={onChange.setOpenConnectDialog}
+                onChange={openDialogs.connect}
             />
             <MqttSubscribeDialog 
                 open={open.openSubscribeDialog}
-                onChange={onChange.setOpenSubscribeDialog}
+                onChange={openDialogs.subscribe}
+            />
+            <MqttPublishDialog 
+                open={open.openPublishDialog}
+                onChange={openDialogs.publish}
             />
         </>
     )

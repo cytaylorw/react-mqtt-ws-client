@@ -50,7 +50,9 @@ export default function ConfigActions(props) {
   const {
       hidden,
       onConnectClick,
-      onSubscribeClick
+      onSubscribeClick,
+      onPublishClick,
+      onClick
   } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -67,7 +69,8 @@ export default function ConfigActions(props) {
 
   const handleConnect = () => {
     handleClose();
-    onConnectClick(true);
+    // onConnectClick(true);
+    onClick('connect')
   }
 
   const handleDisconnect = () =>{
@@ -81,7 +84,16 @@ export default function ConfigActions(props) {
   const handleSubscribe = () => {
     if(true || mqttState.status === 'connected'){
         handleClose();
-        onSubscribeClick(true);
+        // onSubscribeClick(true);
+        onClick('subscribe')
+    }
+  }
+
+  const handlePublish = () => {
+    if(true || mqttState.status === 'connected'){
+        handleClose();
+        // onPublishClick(true);
+        onClick('publish')
     }
   }
 
@@ -113,17 +125,13 @@ export default function ConfigActions(props) {
     { 
         icon: <PublishIcon />, 
         name: 'Publish' ,
+        handler: handlePublish,
         open: mqttState.status === 'connected'// ? true : false 
     },
     { 
         icon: <HistoryIcon />, 
         name: 'History',
-        open: mqttState.messages ? true : false 
-    },
-    { 
-        icon: <SettingsIcon />, 
-        name: 'Settings',
-        open: mqttState.messages ? true : false 
+        open: mqttState.messages.length
     },
   ];
 

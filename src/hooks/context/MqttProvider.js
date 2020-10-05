@@ -51,19 +51,6 @@ const mqttReducer = (state, action) => {
         messages: [...state.messages, ...newMessages],
         messagesCount: state.messagesCount+newMessages.length
       };
-    case ACTIONS.SUBSCRIBE:
-      if(!state.subscribedTo.topic){
-        state.setAlert(['info', `Subscribing to ${state.subscribedTo.topic}...`]);
-        const topic = {[action.setting.subscribeTo.topic]: {qos: action.setting.subscribeTo.qos}};
-        state.mqtt.subscribe(topic, (error, granted) => {
-          if(!error && granted[0].qos <= 2) state.dispatch({type: ACTIONS.SUBSCRIBED, granted: granted[0]})
-        });
-      }
-      return state;
-    case ACTIONS.SUBSCRIBED:
-      // console.log(action.type);
-      state.setAlert([]);
-      return {...state, subscribedTo: action.granted};
     case ACTIONS.INIT:
       return {...state, dispatch: action.dispatch};
     case ACTIONS.CONNECT:
@@ -96,25 +83,65 @@ const mqttReducer = (state, action) => {
       if(state.mqtt && state.mqtt.connected) state.mqtt.end();
       state.dispatch({type: ACTIONS.UNSUBSCRIBED});
       return state;
+    case ACTIONS.SUBSCRIBE:
+      if(!state.subscribedTo.topic){
+        state.setAlert(['info', `Subscribing to ${state.subscribedTo.topic}...`]);
+        const topic = {[action.setting.subscribeTo.topic]: {qos: action.setting.subscribeTo.qos}};
+        state.mqtt.subscribe(topic, (error, granted) => {
+          if(error){
+            state.setAlert(['error', error]);
+          }else if(granted[0].qos > 2){
+            state.setAlert(['error', 'Failed to subscribe topic.']);
+          }else{
+            state.dispatch({type: ACTIONS.SUBSCRIBED, granted: granted[0]})
+          }
+          // if(!error && granted[0].qos <= 2) state.dispatch({type: ACTIONS.SUBSCRIBED, granted: granted[0]})
+        });
+      }
+      return state;
+    case ACTIONS.SUBSCRIBED:
+      // console.log(action.type);
+      state.clearAlert();
+      return {...state, subscribedTo: action.granted};
     case ACTIONS.UNSUBSCRIBE:
       if(state.subscribedTo.topic){
         state.setAlert(['info', `Unsubscribing from ${state.subscribedTo.topic}...`]);
         state.mqtt.unsubscribe(state.subscribedTo.topic, (error) => {
-          if(!error) state.dispatch({type: ACTIONS.UNSUBSCRIBED});
+          if(error){
+            state.setAlert(['error', error]);
+          }else{
+            state.dispatch({type: ACTIONS.UNSUBSCRIBED})
+          }
+          // if(!error) state.dispatch({type: ACTIONS.UNSUBSCRIBED});
         });
       }
       return state;
     case ACTIONS.UNSUBSCRIBED:
       // clearTimeout(timeoutHandle);
       // state.dispatch({type: ACTIONS.UPDATE_MESSAGES});
-      state.setAlert([]);
+      state.clearAlert();
       return {...state, subscribedTo: {topic: '', qos: 0}};
+    case ACTIONS.PUBLISH:
+      // state.setAlert(['info', 'Publishing...']);
+      state.mqtt.publish(
+          action.setting.publishTo.topic, 
+          action.setting.publishTo.message, 
+          {qos: action.setting.publishTo.qos}, 
+          (error) => {
+            if(error){
+              state.setAlert(['error', error]);
+            }else{
+              state.setAlert(['success', 'Published']);
+              state.clearAlert(1000);
+            }
+      })
+      return state;
     case ACTIONS.ON_ERROR:
       console.log(action.error);
       return {...state, error: action.error};
     case ACTIONS.UPDATE_STATUS:
     case ACTIONS.ON_CONNECT:
-      state.setAlert([]);
+      state.clearAlert();
     case ACTIONS.ON_RECONNECT:
     case ACTIONS.ON_CLOSE:
     case ACTIONS.ON_OFFLINE:
@@ -128,7 +155,7 @@ const mqttReducer = (state, action) => {
 export default function MqttProvider({ children }){
   // const [mqttInstance, setMqttInstance] = React.useState(null);
   // const [status, setStatus] = React.useState('offline');
-  const [alert, setAlert] = React.useContext(AlertContext);
+  const [alert, setAlert, clearAlert] = React.useContext(AlertContext);
   
   
   const [state, dispatch] = React.useReducer(mqttReducer, {
@@ -139,7 +166,8 @@ export default function MqttProvider({ children }){
     subscribedTo: {topic: '', qos: 0},
     messages: [],
     messagesCount: 0,
-    setAlert
+    setAlert,
+    clearAlert
   })
   
   React.useEffect(() => {

@@ -20,7 +20,7 @@ export default class ErrorBoundary extends React.Component {
     render() {
       if (this.state.hasError) {
         // 你可以 render 任何客製化的 fallback UI
-        return <h1>Something went wrong.</h1>;
+        return <h1 style="margin: auto">Oops! Something went wrong</h1>;
       }
   
       return this.props.children;

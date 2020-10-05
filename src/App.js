@@ -10,7 +10,18 @@ function App() {
   const [hideActionBtn, setHideActionBtn] = React.useState(false);
   const [openConnectDialog, setOpenConnectDialog] = React.useState(false);
   const [openSubscribeDialog, setOpenSubscribeDialog] = React.useState(false);
+  const [openPublishDialog, setOpenPublishDialog] = React.useState(false);
 
+  const openDialogs = {
+    connect: setOpenConnectDialog,
+    subscribe: setOpenSubscribeDialog,
+    publish: setOpenPublishDialog
+  }
+
+  const setOpenDialog = (name) => {
+    openDialogs[name](true);
+  }
+  
   return (
     <>
       <NavBar
@@ -20,13 +31,12 @@ function App() {
       <MessageTable></MessageTable>
       <ConfigActions
         hidden={hideActionBtn}
-        onConnectClick={setOpenConnectDialog}
-        onSubscribeClick={setOpenSubscribeDialog}
+        onClick={setOpenDialog}
       />
       <AlertMessage></AlertMessage>
       <DialogWrapper 
-        open={{openConnectDialog, openSubscribeDialog}}
-        onChange={{setOpenConnectDialog, setOpenSubscribeDialog}}
+        open={{openConnectDialog, openSubscribeDialog, openPublishDialog}}
+        openDialogs={openDialogs}
       />
     </>
   );

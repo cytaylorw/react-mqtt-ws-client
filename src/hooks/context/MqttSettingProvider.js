@@ -12,7 +12,8 @@ export default function MqttSettingProvider({ children }){
     username: '',
     password: '',
     topic: ['', 0],
-    subscribeTo: {topic: '', qos: 0}
+    subscribeTo: {topic: '', qos: 0},
+    publishTo: {topic: '', qos: 0},
   })
 
   return <MqttSettingContext.Provider value={[mqttSetting, setMqttSetting]}>{children}</MqttSettingContext.Provider>
