@@ -1,6 +1,6 @@
 const mqtt = require('mqtt');
 
-let client  = mqtt.connect('mqtt://192.168.1.141:61883');
+let client  = mqtt.connect('mqtt://test.mosquitto.org:1883');
 
 const publish = () => {
     let time = Date.now();
