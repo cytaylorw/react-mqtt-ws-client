@@ -68,8 +68,8 @@ const mqttReducer = (state, action) => {
       // console.log(state.mqtt)
       if(state.mqtt && state.mqtt.connected) state.mqtt.end();
       const mqttSetting = action.setting;
-      const brokerUrl = 'ws://' + mqttSetting.url;
-      const instance = mqtt.connect(brokerUrl, {
+      // const brokerUrl = 'ws://' + mqttSetting.url;
+      const instance = mqtt.connect(mqttSetting.url, {
         ...mqttSetting,
         username: mqttSetting.anonymous ? undefined : mqttSetting.username,
         password: mqttSetting.anonymous ? undefined : mqttSetting.password,

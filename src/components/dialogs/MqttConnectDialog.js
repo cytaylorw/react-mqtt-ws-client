@@ -125,7 +125,7 @@ export default function MqttConnectDialog(props) {
               id="standard-adornment-url"
               value={mqttSetting.url}
               onChange={handleChange('url')}
-              startAdornment={<InputAdornment position="start">ws://</InputAdornment>}
+              // startAdornment={<InputAdornment position="start">ws://</InputAdornment>}
             />
           </FormControl>
           <TextField 

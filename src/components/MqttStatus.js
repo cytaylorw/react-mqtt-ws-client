@@ -11,7 +11,7 @@ export default function MqttStatus() {
     // const [status, setStatus] = mqttState.status;
     return (
         <Box>
-            <Chip label={`${mqttState.status.toUpperCase()}${mqttState.status === 'connected' ? ` to ws://${mqttSetting.url}` : ''}`} />
+            <Chip label={`${mqttState.status.toUpperCase()}${mqttState.status === 'connected' ? ` to ${mqttSetting.url}` : ''}`} />
             {/* <Chip label={`${mqttState.messagesCount} message(s)`} /> */}
             {
                 mqttState.subscribedTo.topic ? 
