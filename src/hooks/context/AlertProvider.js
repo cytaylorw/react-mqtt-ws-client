@@ -3,7 +3,10 @@ import { AlertContext } from 'hooks/context/Contexts';
 
 export default function AlertProvider({ children }){
 
-  const [alert, setAlert] = React.useState(['error','test error']);
+  const [alert, setAlert] = React.useState([]);
+  const clearAlert = (timeout) => {
+    setTimeout(() => setAlert([]), timeout ? timeout : 100);
+  }
 
-  return <AlertContext.Provider value={[alert, setAlert]}>{children}</AlertContext.Provider>
+  return <AlertContext.Provider value={[alert, setAlert, clearAlert]}>{children}</AlertContext.Provider>
 }
