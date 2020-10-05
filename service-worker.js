@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/react-mqtt-ws-client/precache-manifest.2834648c288479a0c7be662be2f2b53f.js"
+  "/react-mqtt-ws-client/precache-manifest.dde60dd77a04b505e29e99ccce95a29a.js"
 );
 
 self.addEventListener('message', (event) => {
