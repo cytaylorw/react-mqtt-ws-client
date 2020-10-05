@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "b5f089a70246839ae8091b278a97326c",
+    "revision": "2496a42516c885de1f0afbc5111f598b",
     "url": "/react-mqtt-ws-client/index.html"
   },
   {
-    "revision": "d983f76cc05bf8d7f61d",
+    "revision": "819918a891834776f360",
     "url": "/react-mqtt-ws-client/static/css/main.c2dd9b8b.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/react-mqtt-ws-client/static/js/2.bf50ec09.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "d983f76cc05bf8d7f61d",
-    "url": "/react-mqtt-ws-client/static/js/main.28cee426.chunk.js"
+    "revision": "819918a891834776f360",
+    "url": "/react-mqtt-ws-client/static/js/main.0a4c786d.chunk.js"
   },
   {
     "revision": "b5644244ea8f528bd114",
