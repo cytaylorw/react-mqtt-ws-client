@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/react-mqtt-ws-client/static/css/main.c2dd9b8b.chunk.css",
-    "main.js": "/react-mqtt-ws-client/static/js/main.c7bc4232.chunk.js",
-    "main.js.map": "/react-mqtt-ws-client/static/js/main.c7bc4232.chunk.js.map",
+    "main.js": "/react-mqtt-ws-client/static/js/main.28cee426.chunk.js",
+    "main.js.map": "/react-mqtt-ws-client/static/js/main.28cee426.chunk.js.map",
     "runtime-main.js": "/react-mqtt-ws-client/static/js/runtime-main.1e216e0c.js",
     "runtime-main.js.map": "/react-mqtt-ws-client/static/js/runtime-main.1e216e0c.js.map",
     "static/js/2.bf50ec09.chunk.js": "/react-mqtt-ws-client/static/js/2.bf50ec09.chunk.js",
     "static/js/2.bf50ec09.chunk.js.map": "/react-mqtt-ws-client/static/js/2.bf50ec09.chunk.js.map",
     "index.html": "/react-mqtt-ws-client/index.html",
-    "precache-manifest.cd75304be39fe6e8dbcea8cd3a7461b6.js": "/react-mqtt-ws-client/precache-manifest.cd75304be39fe6e8dbcea8cd3a7461b6.js",
+    "precache-manifest.2c97c35302ea9e0c817d5164656efda1.js": "/react-mqtt-ws-client/precache-manifest.2c97c35302ea9e0c817d5164656efda1.js",
     "service-worker.js": "/react-mqtt-ws-client/service-worker.js",
     "static/css/main.c2dd9b8b.chunk.css.map": "/react-mqtt-ws-client/static/css/main.c2dd9b8b.chunk.css.map",
     "static/js/2.bf50ec09.chunk.js.LICENSE.txt": "/react-mqtt-ws-client/static/js/2.bf50ec09.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.1e216e0c.js",
     "static/js/2.bf50ec09.chunk.js",
     "static/css/main.c2dd9b8b.chunk.css",
-    "static/js/main.c7bc4232.chunk.js"
+    "static/js/main.28cee426.chunk.js"
   ]
 }
