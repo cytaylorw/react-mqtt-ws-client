@@ -1,7 +1,7 @@
 import React from 'react';
 import mqtt from 'mqtt';
 import MqttSettingProvider from 'hooks/context/MqttSettingProvider';
-import { MqttSettingContext,  MqttContext} from 'hooks/context/Contexts';
+import { AlertContext,  MqttContext} from 'hooks/context/Contexts';
 
 const ACTIONS = {
   INIT: 'init',
@@ -53,6 +53,7 @@ const mqttReducer = (state, action) => {
       };
     case ACTIONS.SUBSCRIBE:
       if(!state.subscribedTo.topic){
+        state.setAlert(['info', `Subscribing to ${state.subscribedTo.topic}...`]);
         const topic = {[action.setting.subscribeTo.topic]: {qos: action.setting.subscribeTo.qos}};
         state.mqtt.subscribe(topic, (error, granted) => {
           if(!error && granted[0].qos <= 2) state.dispatch({type: ACTIONS.SUBSCRIBED, granted: granted[0]})
@@ -61,6 +62,7 @@ const mqttReducer = (state, action) => {
       return state;
     case ACTIONS.SUBSCRIBED:
       // console.log(action.type);
+      state.setAlert([]);
       return {...state, subscribedTo: action.granted};
     case ACTIONS.INIT:
       return {...state, dispatch: action.dispatch};
@@ -69,25 +71,34 @@ const mqttReducer = (state, action) => {
       if(state.mqtt && state.mqtt.connected) state.mqtt.end();
       const mqttSetting = action.setting;
       // const brokerUrl = 'ws://' + mqttSetting.url;
-      const instance = mqtt.connect(mqttSetting.url, {
-        ...mqttSetting,
-        username: mqttSetting.anonymous ? undefined : mqttSetting.username,
-        password: mqttSetting.anonymous ? undefined : mqttSetting.password,
-        reconnectPeriod: 0
-      });
-      instance.on('connect', () => state.dispatch({type: ACTIONS.ON_CONNECT, status: 'connected'}));
-      instance.on('reconnect', () => state.dispatch({type: ACTIONS.ON_RECONNECT, status: 'reconnecting'}));
-      instance.on('close', () => state.dispatch({type: ACTIONS.ON_CLOSE, status: 'closed'}));
-      instance.on('offline', () => state.dispatch({type: ACTIONS.ON_OFFLINE, status: 'offline'}));
-      instance.on('error', (error) => state.dispatch({type: ACTIONS.ON_ERROR, error}));
-      instance.on('message', (topic, message, packet) => state.dispatch({type: ACTIONS.ON_MESSAGE, topic, message, packet, dispatch: action.dispatch}));
-      return {...state, mqtt:instance};
+      try {        
+        const instance = mqtt.connect(mqttSetting.url, {
+          ...mqttSetting,
+          username: mqttSetting.anonymous ? undefined : mqttSetting.username,
+          password: mqttSetting.anonymous ? undefined : mqttSetting.password,
+          reconnectPeriod: 0
+        });
+        instance.on('connect', () => state.dispatch({type: ACTIONS.ON_CONNECT, status: 'connected'}));
+        instance.on('reconnect', () => state.dispatch({type: ACTIONS.ON_RECONNECT, status: 'reconnecting'}));
+        instance.on('close', () => state.dispatch({type: ACTIONS.ON_CLOSE, status: 'closed'}));
+        instance.on('offline', () => state.dispatch({type: ACTIONS.ON_OFFLINE, status: 'offline'}));
+        instance.on('error', (error) => state.dispatch({type: ACTIONS.ON_ERROR, error}));
+        instance.on('message', (topic, message, packet) => state.dispatch({type: ACTIONS.ON_MESSAGE, topic, message, packet, dispatch: action.dispatch}));
+        state.setAlert(['info', `Connecting to ${mqttSetting.url}...`])
+        return {...state, mqtt:instance};
+      } catch (error) {
+        // console.log(JSON.stringify(error))
+        state.setAlert(['error', error])
+        return state;
+      }
     case ACTIONS.DISCONNECT:
+      state.setAlert(['info', `Disconnecting...`]);
       if(state.mqtt && state.mqtt.connected) state.mqtt.end();
       state.dispatch({type: ACTIONS.UNSUBSCRIBED});
       return state;
     case ACTIONS.UNSUBSCRIBE:
       if(state.subscribedTo.topic){
+        state.setAlert(['info', `Unsubscribing from ${state.subscribedTo.topic}...`]);
         state.mqtt.unsubscribe(state.subscribedTo.topic, (error) => {
           if(!error) state.dispatch({type: ACTIONS.UNSUBSCRIBED});
         });
@@ -96,12 +107,14 @@ const mqttReducer = (state, action) => {
     case ACTIONS.UNSUBSCRIBED:
       // clearTimeout(timeoutHandle);
       // state.dispatch({type: ACTIONS.UPDATE_MESSAGES});
+      state.setAlert([]);
       return {...state, subscribedTo: {topic: '', qos: 0}};
     case ACTIONS.ON_ERROR:
       console.log(action.error);
       return {...state, error: action.error};
     case ACTIONS.UPDATE_STATUS:
     case ACTIONS.ON_CONNECT:
+      state.setAlert([]);
     case ACTIONS.ON_RECONNECT:
     case ACTIONS.ON_CLOSE:
     case ACTIONS.ON_OFFLINE:
@@ -115,6 +128,7 @@ const mqttReducer = (state, action) => {
 export default function MqttProvider({ children }){
   // const [mqttInstance, setMqttInstance] = React.useState(null);
   // const [status, setStatus] = React.useState('offline');
+  const [alert, setAlert] = React.useContext(AlertContext);
   
   
   const [state, dispatch] = React.useReducer(mqttReducer, {
@@ -124,7 +138,8 @@ export default function MqttProvider({ children }){
     status: 'offline',
     subscribedTo: {topic: '', qos: 0},
     messages: [],
-    messagesCount: 0
+    messagesCount: 0,
+    setAlert
   })
   
   React.useEffect(() => {

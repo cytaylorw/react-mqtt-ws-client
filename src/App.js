@@ -3,6 +3,7 @@ import './App.css';
 import NavBar from 'components/NavBar';
 import MessageTable from 'components/tables/MessageTable';
 import ConfigActions from 'components/ConfigActions';
+import AlertMessage from 'components/AlertMessage';
 import DialogWrapper from 'components/dialogs/DialogWrapper';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         onConnectClick={setOpenConnectDialog}
         onSubscribeClick={setOpenSubscribeDialog}
       />
+      <AlertMessage></AlertMessage>
       <DialogWrapper 
         open={{openConnectDialog, openSubscribeDialog}}
         onChange={{setOpenConnectDialog, setOpenSubscribeDialog}}

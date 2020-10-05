@@ -6,7 +6,7 @@ import { MqttSettingContext } from 'hooks/context/Contexts';
 export default function MqttSettingProvider({ children }){
 
   const [mqttSetting, setMqttSetting] = useLocalStorage('mqttSetting', {
-    url: window.location.protocol === 'https' ? 'wss://' : 'ws://',
+    url: window.location.protocol === 'https:' ? 'wss://' : 'ws://',
     clientId: `mqtt-ws-client-${Date.now().toString(36)}`,
     anomynous: false,
     username: '',
