@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "f9b74d9bddddf50d0236d86c97b1b291",
+    "revision": "f6602bcc736b3a824d7698a10838a833",
     "url": "/react-mqtt-ws-client/index.html"
   },
   {
-    "revision": "9b048e5e1bcd329776de",
+    "revision": "720fc03e32a78bfd67a4",
     "url": "/react-mqtt-ws-client/static/css/main.c2dd9b8b.chunk.css"
   },
   {
-    "revision": "2038e9f57e12a46a10fa",
-    "url": "/react-mqtt-ws-client/static/js/2.b9834920.chunk.js"
+    "revision": "967543339fc8bc2f7399",
+    "url": "/react-mqtt-ws-client/static/js/2.f95c79dd.chunk.js"
   },
   {
     "revision": "1ab79f7743ae07e887277cb27f187c23",
-    "url": "/react-mqtt-ws-client/static/js/2.b9834920.chunk.js.LICENSE.txt"
+    "url": "/react-mqtt-ws-client/static/js/2.f95c79dd.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "9b048e5e1bcd329776de",
-    "url": "/react-mqtt-ws-client/static/js/main.4f0a8e5c.chunk.js"
+    "revision": "720fc03e32a78bfd67a4",
+    "url": "/react-mqtt-ws-client/static/js/main.54b63ef9.chunk.js"
   },
   {
     "revision": "b5644244ea8f528bd114",
