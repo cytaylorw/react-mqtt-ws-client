@@ -60,7 +60,8 @@ export default function CollapsibleTable() {
   const tableColumns = columns[mqttSetting.subscribeTo.converter] ? 
     columns[mqttSetting.subscribeTo.converter] : 
     columns['default'];
-
+  const colSpan = Object.keys(tableColumns).length+1;
+  const pageOptions = [10, 25, 50, 100];
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -73,7 +74,22 @@ export default function CollapsibleTable() {
     <Container maxWidth="xl" className={classes.container}>
         <TableContainer component={Paper}>
         <Table size="small" aria-label="collapsible table">
-            <TableHead>
+        <TableHead>
+            <ActionsRow
+              rowsPerPageOptions={pageOptions}
+              colSpan={colSpan}
+              count={mqttState.messages.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: { 'aria-label': 'rows per page' },
+                native: true,
+              }}
+              onChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+          </TableHead>
+          <TableHead>
             <TableRow>
                 <TableCell />
                 {Object.entries(tableColumns).map(([key, column]) => (
@@ -84,32 +100,32 @@ export default function CollapsibleTable() {
                 <TableCell align="right">Carbs&nbsp;(g)</TableCell>
                 <TableCell align="right">Protein&nbsp;(g)</TableCell> */}
             </TableRow>
-            </TableHead>
-            <TableBody>
-            {[...mqttState.messages].reverse().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((message, index) => (
-                <MessageRow 
-                  key={index} 
-                  row={message}
-                  columns={tableColumns}
-                  collpasedColumns={collpasedColumns[mqttSetting.subscribeTo.converter]}
-                />
-            ))}
-            </TableBody>
-            <TableFooter>
-              <ActionsRow
-                rowsPerPageOptions={[10, 25, 50]}
-                colSpan={7}
-                count={mqttState.messages.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                SelectProps={{
-                  inputProps: { 'aria-label': 'rows per page' },
-                  native: true,
-                }}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
+          </TableHead>
+          <TableBody>
+          {[...mqttState.messages].reverse().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((message, index) => (
+              <MessageRow 
+                key={index} 
+                row={message}
+                columns={tableColumns}
+                collpasedColumns={collpasedColumns[mqttSetting.subscribeTo.converter]}
               />
-        </TableFooter>
+          ))}
+          </TableBody>
+          <TableFooter>
+            <ActionsRow
+              rowsPerPageOptions={pageOptions}
+              colSpan={colSpan}
+              count={mqttState.messages.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              SelectProps={{
+                inputProps: { 'aria-label': 'rows per page' },
+                native: true,
+              }}
+              onChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+          </TableFooter>
         </Table>
         </TableContainer>
     </Container>

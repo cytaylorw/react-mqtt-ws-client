@@ -20,7 +20,8 @@ const ACTIONS = {
   ON_ERROR: 'onError',
   ON_MESSAGE: 'onMessage',
   UPDATE_STATUS: 'updateStatus',
-  UPDATE_MESSAGES: 'updateMessages'
+  UPDATE_MESSAGES: 'updateMessages',
+  TOGGLE_PAUSE: 'togglePause',
 }
 
 let messageBuffer = [{messages: []}];
@@ -31,7 +32,7 @@ const mqttReducer = (state, action) => {
     case ACTIONS.ON_MESSAGE:
       const last = messageBuffer.length - 1;
       messageBuffer[last].messages.push(messageConverter[state.subscribedTo.converter](action));
-      if(!timeoutHandle){
+      if(!timeoutHandle && !state.pause){
         timeoutHandle = setTimeout(() => state.dispatch({type: ACTIONS.UPDATE_MESSAGES}), state.updateInterval)
       }
       return state;
@@ -142,6 +143,8 @@ const mqttReducer = (state, action) => {
       // console.log(action.type)
       // console.log(state.mqtt)
       return {...state, status: action.status};
+      case ACTIONS.TOGGLE_PAUSE:
+      return {...state, pause: !state.pause};
     default:
       return state;
   }
@@ -161,7 +164,8 @@ export default function MqttProvider({ children }){
     messages: [],
     messagesCount: 0,
     setAlert,
-    clearAlert
+    clearAlert,
+    pause: false
   })
   
   React.useEffect(() => {
