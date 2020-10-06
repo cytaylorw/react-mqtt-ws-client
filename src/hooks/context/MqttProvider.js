@@ -2,6 +2,7 @@ import React from 'react';
 import mqtt from 'mqtt';
 import MqttSettingProvider from 'hooks/context/MqttSettingProvider';
 import { AlertContext,  MqttContext} from 'hooks/context/Contexts';
+import { messageConverter } from 'lib/converter/MessageConverter';
 
 const ACTIONS = {
   INIT: 'init',
@@ -28,15 +29,8 @@ let timeoutHandle = null;
 const mqttReducer = (state, action) => {
   switch(action.type){
     case ACTIONS.ON_MESSAGE:
-      let last = messageBuffer.length - 1;
-      messageBuffer[last].messages.push({
-        topic: action.topic, 
-        message: action.message.toString(), 
-        qos: action.packet.qos, 
-        retain: action.packet.retain, 
-        dup: action.packet.dup, 
-        time: Date.now()
-      }) 
+      const last = messageBuffer.length - 1;
+      messageBuffer[last].messages.push(messageConverter[state.subscribedTo.converter](action));
       if(!timeoutHandle){
         timeoutHandle = setTimeout(() => state.dispatch({type: ACTIONS.UPDATE_MESSAGES}), state.updateInterval)
       }
@@ -44,7 +38,7 @@ const mqttReducer = (state, action) => {
     case ACTIONS.UPDATE_MESSAGES:
       messageBuffer.push({messages: []});
       timeoutHandle = null;
-      let newMessages = messageBuffer[0].messages;
+      const newMessages = messageBuffer[0].messages;
       messageBuffer.shift();
       return {
         ...state,
@@ -70,7 +64,7 @@ const mqttReducer = (state, action) => {
         instance.on('close', () => state.dispatch({type: ACTIONS.ON_CLOSE, status: 'closed'}));
         instance.on('offline', () => state.dispatch({type: ACTIONS.ON_OFFLINE, status: 'offline'}));
         instance.on('error', (error) => state.dispatch({type: ACTIONS.ON_ERROR, error}));
-        instance.on('message', (topic, message, packet) => state.dispatch({type: ACTIONS.ON_MESSAGE, topic, message, packet, dispatch: action.dispatch}));
+        instance.on('message', (topic, message, packet) => state.dispatch({type: ACTIONS.ON_MESSAGE, topic, message, packet}));
         state.setAlert(['info', `Connecting to ${mqttSetting.url}...`])
         return {...state, mqtt:instance};
       } catch (error) {
@@ -93,7 +87,7 @@ const mqttReducer = (state, action) => {
           }else if(granted[0].qos > 2){
             state.setAlert(['error', 'Failed to subscribe topic.']);
           }else{
-            state.dispatch({type: ACTIONS.SUBSCRIBED, granted: granted[0]})
+            state.dispatch({type: ACTIONS.SUBSCRIBED, granted: {...granted[0], converter: action.setting.subscribeTo.converter}})
           }
           // if(!error && granted[0].qos <= 2) state.dispatch({type: ACTIONS.SUBSCRIBED, granted: granted[0]})
         });
@@ -120,7 +114,7 @@ const mqttReducer = (state, action) => {
       // clearTimeout(timeoutHandle);
       // state.dispatch({type: ACTIONS.UPDATE_MESSAGES});
       state.clearAlert();
-      return {...state, subscribedTo: {topic: '', qos: 0}};
+      return {...state, subscribedTo: {...state.subscribedTo, topic: '', qos: 0}};
     case ACTIONS.PUBLISH:
       // state.setAlert(['info', 'Publishing...']);
       state.mqtt.publish(

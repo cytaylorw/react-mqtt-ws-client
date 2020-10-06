@@ -131,7 +131,7 @@ export default function ConfigActions(props) {
     { 
         icon: <HistoryIcon />, 
         name: 'History',
-        open: mqttState.messages.length
+        open: mqttState.messages.length > 0
     },
   ];
 

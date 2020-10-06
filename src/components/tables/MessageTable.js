@@ -16,9 +16,10 @@ import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import { MqttContext } from 'hooks/context/Contexts';
+import { MqttContext, MqttSettingContext } from 'hooks/context/Contexts';
 import ActionsRow from 'components/tables/ActionsRow';
 import MessageRow from 'components/tables/MessageRow';
+import { columns, collpasedColumns } from 'lib/converter/MessageConverter';
 
 const useRowStyles = makeStyles((theme) => ({
   root: {
@@ -31,29 +32,34 @@ const useRowStyles = makeStyles((theme) => ({
   }
 }));
 
-const columns = {
-    time: 'Time',
-    topic: 'Topic',
-    // qos: 'QoS',
-    // retain: 'Retained',
-    // dup: 'Duplicate',
-    message: 'Message'
-}
+// const columns = {
+//     time: 'Time',
+//     topic: 'Topic',
+//     // qos: 'QoS',
+//     // retain: 'Retained',
+//     // dup: 'Duplicate',
+//     message: 'Message'
+// }
 
-const collpasedColumns = {
-    // time: 'Time',
-    // topic: 'Topic',
-    qos: 'QoS',
-    retain: 'Retained',
-    dup: 'Duplicate',
-    // message: 'Message'
-}
+// const collpasedColumns = {
+//     // time: 'Time',
+//     // topic: 'Topic',
+//     qos: 'QoS',
+//     retain: 'Retained',
+//     dup: 'Duplicate',
+//     // message: 'Message'
+// }
 
 export default function CollapsibleTable() {
   const classes = useRowStyles();
   const [mqttState, dispatch] = React.useContext(MqttContext);
+  const [mqttSetting, setMqttSetting] = React.useContext(MqttSettingContext);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const tableColumns = columns[mqttSetting.subscribeTo.converter] ? 
+    columns[mqttSetting.subscribeTo.converter] : 
+    columns['default'];
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -70,7 +76,7 @@ export default function CollapsibleTable() {
             <TableHead>
             <TableRow>
                 <TableCell />
-                {Object.entries(columns).map(([key, column]) => (
+                {Object.entries(tableColumns).map(([key, column]) => (
                     <TableCell key={key}>{column}</TableCell>
                 ))}
                 {/* <TableCell align="right">Calories</TableCell>
@@ -84,8 +90,8 @@ export default function CollapsibleTable() {
                 <MessageRow 
                   key={index} 
                   row={message}
-                  columns={columns}
-                  collpasedColumns={collpasedColumns}
+                  columns={tableColumns}
+                  collpasedColumns={collpasedColumns[mqttSetting.subscribeTo.converter]}
                 />
             ))}
             </TableBody>

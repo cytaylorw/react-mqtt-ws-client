@@ -7,12 +7,13 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Typography from '@material-ui/core/Typography';
+import InputLabel from '@material-ui/core/InputLabel';
 import Slider from '@material-ui/core/Slider';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import { MqttSettingContext,  MqttContext} from 'hooks/context/Contexts';
+import Select from '@material-ui/core/Select';
+import { MqttSettingContext, MqttContext, AlertContext} from 'hooks/context/Contexts';
+import { types, messageConverter } from 'lib/converter/MessageConverter';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,7 +32,11 @@ const useStyles = makeStyles((theme) => ({
   slider: {
     width: '100px',
     marginLeft: theme.spacing(2),
-  }
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: '100%',
+  },
 }));
 
 export default function MqttLoginDialog(props) {
@@ -40,6 +45,7 @@ export default function MqttLoginDialog(props) {
 //   const [open, setOpen] = React.useState(false);
   const [mqttSetting, setMqttSetting] = React.useContext(MqttSettingContext);
   const [mqttState, dispatch] = React.useContext(MqttContext);
+  const [alert, setAlert, clearAlert] = React.useContext(AlertContext);
   // console.log(mqttSetting)
   const handleClickOpen = () => {
     // setOpen(true);
@@ -51,11 +57,15 @@ export default function MqttLoginDialog(props) {
   };
 
   const handleSubscribe = () => {
-    dispatch({type: 'subscribe', setting: mqttSetting, dispatch});
+    if(!messageConverter[mqttSetting.subscribeTo.converter]){
+      setAlert(['error','Converter does not exist.']);
+      return;
+    }
+    dispatch({type: 'subscribe', setting: mqttSetting});
   }
 
   const handlUnsubscribe = () =>{
-    dispatch({type: 'unsubscribe', dispatch});
+    dispatch({type: 'unsubscribe'});
   }
 
   const handleTopicChange = (prop) => (event, value) => {
@@ -103,25 +113,42 @@ export default function MqttLoginDialog(props) {
             onChange={handleTopicChange('topic')}
             value={mqttSetting.subscribeTo.topic}
           />
-            <FormControlLabel
-              control={
-                <Slider
-                  defaultValue={mqttSetting.subscribeTo.qos}
-                  min={0}
-                  max={2}
-                  // getAriaValueText={valuetext}
-                  aria-labelledby="discrete-slider-always"
-                  step={1}
-                  marks={marks}
-                  valueLabelDisplay="off"
-                  className={classes.slider} 
-                  onChange={handleTopicChange('qos')}
-                />
-              }
-              label="Qos"
-              labelPlacement="start"
-              className={classes.margin} 
-            />
+          <FormControlLabel
+            control={
+              <Slider
+                defaultValue={mqttSetting.subscribeTo.qos}
+                min={0}
+                max={2}
+                // getAriaValueText={valuetext}
+                aria-labelledby="discrete-slider-always"
+                step={1}
+                marks={marks}
+                valueLabelDisplay="off"
+                className={classes.slider} 
+                onChange={handleTopicChange('qos')}
+              />
+            }
+            label="Qos"
+            labelPlacement="start"
+            className={classes.margin} 
+          />
+          <FormControl className={classes.formControl} error={messageConverter[mqttSetting.subscribeTo.converter] ? false : true}>
+            <InputLabel htmlFor="age-native-simple">Converter</InputLabel>
+            <Select
+              native
+              value={mqttSetting.subscribeTo.converter}
+              onChange={handleTopicChange('converter')}
+              inputProps={{
+                name: 'converter',
+                id: 'converter',
+              }}
+            >
+              {/* <option aria-label="None" value="" /> */}
+              {types.map((type) => (
+                <option key={type.value} value={type.value}>{type.label}</option>
+              ))}
+            </Select>
+        </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

@@ -33,7 +33,7 @@ export default function MessageRow(props) {
     const { columns, collpasedColumns, row } = props;
     const [open, setOpen] = React.useState(false);
     const classes = useRowStyles();
-
+    // console.log(row)
     const colSpan = Object.keys(columns).length + 1;
   
     return (

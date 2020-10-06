@@ -12,7 +12,7 @@ export default function MqttSettingProvider({ children }){
     username: '',
     password: '',
     topic: ['', 0],
-    subscribeTo: {topic: '', qos: 0},
+    subscribeTo: {topic: '', qos: 0, converter: 'default'},
     publishTo: {topic: '', qos: 0},
   })
 
