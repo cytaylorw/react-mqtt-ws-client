@@ -79,6 +79,7 @@ export default function MqttLoginDialog(props) {
         ...mqttSetting.subscribeTo, 
         [prop]: typeof value === 'undefined' ? event.target.value : value}
     });
+    if(prop = 'converter' && !messageConverter[value]) setAlert(['error', 'Selected converter does not exist.'])
   };
 
   const marks = [
@@ -112,6 +113,7 @@ export default function MqttLoginDialog(props) {
             className={classes.margin} 
             onChange={handleTopicChange('topic')}
             value={mqttSetting.subscribeTo.topic}
+            error={!mqttSetting.subscribeTo.topic}
           />
           <FormControlLabel
             control={
@@ -132,7 +134,7 @@ export default function MqttLoginDialog(props) {
             labelPlacement="start"
             className={classes.margin} 
           />
-          <FormControl className={classes.formControl} error={messageConverter[mqttSetting.subscribeTo.converter] ? false : true}>
+          <FormControl className={classes.formControl} error={!messageConverter[mqttSetting.subscribeTo.converter]}>
             <InputLabel htmlFor="age-native-simple">Converter</InputLabel>
             <Select
               native
@@ -154,10 +156,10 @@ export default function MqttLoginDialog(props) {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handlUnsubscribe} color="primary">
+          <Button onClick={handlUnsubscribe} color="primary" disabled={!mqttState.subscribedTo.topic || !mqttState.mqtt.connected}>
             Unsubscribe
           </Button>
-          <Button onClick={handleSubscribe} color="primary">
+          <Button onClick={handleSubscribe} color="primary" disabled={!messageConverter[mqttSetting.subscribeTo.converter] || !mqttSetting.subscribeTo.topic}>
             Subscribe
           </Button>
         </DialogActions>

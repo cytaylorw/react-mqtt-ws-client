@@ -46,6 +46,9 @@ export default function MqttConnectDialog(props) {
   const [mqttSetting, setMqttSetting] = React.useContext(MqttSettingContext);
   const [mqttState, dispatch] = React.useContext(MqttContext);
 
+  const connectDisabled = mqttState.mqtt?.connected || !mqttSetting.url || !mqttSetting.clientId || 
+    (!mqttSetting.anomynous && (!mqttSetting.username || !mqttSetting.password));
+
   const handleClickOpen = () => {
     // setOpen(true);
   };
@@ -88,14 +91,16 @@ export default function MqttConnectDialog(props) {
         label="Username"
         value={mqttSetting.username}
         onChange={handleChange('username')}
+        error={!mqttSetting.username}
       />
       <FormControl fullWidth className={classes.margin}>
-        <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+        <InputLabel htmlFor="standard-adornment-password" error={!mqttSetting.password}>Password</InputLabel>
         <Input
           id="standard-adornment-password"
           type={showPassword ? 'text' : 'password'}
           value={mqttSetting.password}
           onChange={handleChange('password')}
+          error={!mqttSetting.password}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -119,7 +124,7 @@ export default function MqttConnectDialog(props) {
           <DialogContentText>
             Connect to a MQTT server over WebSocket.
           </DialogContentText>
-          <FormControl fullWidth className={classes.margin}>
+          <FormControl fullWidth className={classes.margin} error={!mqttSetting.url}>
             <InputLabel htmlFor="standard-adornment-amount">URL</InputLabel>
             <Input
               id="standard-adornment-url"
@@ -135,6 +140,7 @@ export default function MqttConnectDialog(props) {
             label="Client ID"
             value={mqttSetting.clientId}
             onChange={handleChange('clientId')}
+            error={!mqttSetting.clientId}
           />
           <FormControl fullWidth className={classes.margin}>
             <FormControlLabel
@@ -156,10 +162,10 @@ export default function MqttConnectDialog(props) {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handlDisconnect} color="primary">
+          <Button onClick={handlDisconnect} color="primary" disabled={mqttState.status !== 'connected' || !mqttState.mqtt?.connected}>
             Disconnect
           </Button>
-          <Button onClick={handleConnect} color="primary">
+          <Button onClick={handleConnect} color="primary" disabled={connectDisabled}>
             Connect
           </Button>
         </DialogActions>

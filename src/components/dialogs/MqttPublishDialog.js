@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function MqttLoginDialog(props) {
+export default function MqttPublishDialog(props) {
   const classes = useStyles();
   const {open, onChange} = props;
 //   const [open, setOpen] = React.useState(false);
@@ -58,6 +58,9 @@ export default function MqttLoginDialog(props) {
   };
 
   const handlePublish = () => {
+    // if(!mqttSetting.publishTo.topic || !mqttSetting.publishTo.message){
+    //   return;
+    // }
     dispatch({type: 'publish', setting: mqttSetting});
   }
 
@@ -101,6 +104,7 @@ export default function MqttLoginDialog(props) {
             Publish to a MQTT topic.
           </DialogContentText>
           <TextField
+            error={!mqttSetting.publishTo.topic}
             autoFocus
             id="topic"
             label="Topic"
@@ -129,8 +133,9 @@ export default function MqttLoginDialog(props) {
             labelPlacement="start"
             className={classes.margin} 
           />
-          <InputLabel className={classes.margin}>Message</InputLabel>
+          <InputLabel className={classes.margin}  error={!mqttSetting.publishTo.message}>Message</InputLabel>
           <TextareaAutosize 
+            error="true"
             aria-label="message" 
             placeholder="Message" 
             rowsMin="3" 
@@ -150,7 +155,7 @@ export default function MqttLoginDialog(props) {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handlePublish} color="primary">
+          <Button onClick={handlePublish} color="primary" disabled={!mqttState.mqtt?.connected || !mqttSetting.publishTo.topic || !mqttSetting.publishTo.message}>
             Publish
           </Button>
         </DialogActions>

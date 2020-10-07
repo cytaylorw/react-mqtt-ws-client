@@ -108,25 +108,25 @@ export default function ConfigActions(props) {
         icon: <CancelPresentationIcon />, 
         name: 'Disconnect', 
         handler: handleDisconnect, 
-        open: mqttState.status === 'connected'// ? true : false 
+        open: mqttState.status === 'connected' && mqttState.mqtt.connected
     },
     { 
         icon: <AddToQueueIcon />, 
         name: 'Subscribe', 
         handler: handleSubscribe,
-        open: mqttState.status === 'connected'// ? true : false 
+        open: mqttState.status === 'connected' && mqttState.mqtt.connected
     },
     { 
         icon: <RemoveFromQueueIcon />, 
         name: 'Unsubscribe',
         handler: handleUnsubscribe,
-        open: mqttState.subscribedTo.topic ? true : false 
+        open: mqttState.subscribedTo.topic && mqttState.mqtt.connected
     },
     { 
         icon: <PublishIcon />, 
         name: 'Publish' ,
         handler: handlePublish,
-        open: mqttState.status === 'connected'// ? true : false 
+        open: mqttState.status === 'connected' && mqttState.mqtt.connected 
     },
     { 
         icon: <HistoryIcon />, 
