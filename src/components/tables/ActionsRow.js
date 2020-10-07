@@ -133,8 +133,8 @@ export default function ActionsRow(props) {
           <TableRow>
             <TableCell>
               { mqttState.pause ? 
-                <PlayCircleOutlineIcon onClick={togglePause} class={`MuiSvgIcon-root ${classes.control}`}/> :
-                <PauseCircleOutlineIcon onClick={togglePause} class={`MuiSvgIcon-root ${classes.control}`}/>
+                <PlayCircleOutlineIcon onClick={togglePause} className={`MuiSvgIcon-root ${classes.control}`}/> :
+                <PauseCircleOutlineIcon onClick={togglePause} className={`MuiSvgIcon-root ${classes.control}`}/>
               }
             </TableCell>
             <TablePagination
