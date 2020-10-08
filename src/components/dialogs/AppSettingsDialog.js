@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -10,9 +10,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { MqttSettingContext,  MqttContext} from 'hooks/context/Contexts';
 
 const useStyles = makeStyles((theme) => ({
@@ -38,29 +40,34 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     marginLeft: theme.spacing(2),
     boxSizing: 'border-box'
+  },
+  toText: {
+    margin: 'auto'
+  },
+  timeControl: {
+    flexDirection: 'row'
   }
 }));
 
-export default function MqttPublishDialog(props) {
+const defaultText = {
+  localeLabel: 'Locale',
+  startTimeLabel: 'Start Time',
+  endTimeLabel: 'End Time',
+  toLabel: 'To'
+}
+
+export default function AppSettingsDialog(props) {
   const classes = useStyles();
   const {open, onChange} = props;
-//   const [open, setOpen] = React.useState(false);
   const [mqttSetting, setMqttSetting] = React.useContext(MqttSettingContext);
   const [mqttState, dispatch] = React.useContext(MqttContext);
-  // console.log(mqttSetting)
-  const handleClickOpen = () => {
-    // setOpen(true);
-  };
+  const theme = useTheme();
 
   const handleClose = () => {
-    // setOpen(false);
     onChange(false);
   };
 
   const handlePublish = () => {
-    // if(!mqttSetting.publishTo.topic || !mqttSetting.publishTo.message){
-    //   return;
-    // }
     dispatch({type: 'publish', setting: mqttSetting});
   }
 
@@ -97,59 +104,58 @@ export default function MqttPublishDialog(props) {
   ]
 
   return (
-      <Dialog fullWidth open={open} onClose={handleClose} aria-labelledby="publish-dialog-title">
-        <DialogTitle id="publish-dialog-title">Publish</DialogTitle>
+      <Dialog fullWidth open={open} onClose={handleClose} aria-labelledby="settings-dialog-title">
+        <DialogTitle id="settings-dialog-title">Settings</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Publish to a MQTT topic.
+            Application settings for MQTT Websocket Client.
           </DialogContentText>
-          <TextField
-            error={!mqttSetting.publishTo.topic}
-            autoFocus
-            id="topic"
-            label="Topic"
-            type="text"
-            fullWidth
-            className={classes.margin} 
-            onChange={handleTopicChange('topic')}
-            value={mqttSetting.publishTo.topic}
-          />
-          <FormControlLabel
-            control={
-              <Slider
-                defaultValue={mqttSetting.publishTo.qos}
-                min={0}
-                max={2}
-                // getAriaValueText={valuetext}
-                aria-labelledby="discrete-slider-always"
-                step={1}
-                marks={marks}
-                valueLabelDisplay="off"
-                className={classes.slider} 
-                onChange={handleTopicChange('qos')}
+          <FormControl fullWidth className={classes.margin}>
+          <Autocomplete
+            options={theme.supportLocales}
+            getOptionLabel={(key) => `${key.substring(0, 2)}-${key.substring(2, 4)}`}
+            style={{ width: 300 }}
+            value={mqttSetting.locale}
+            disableClearable
+            onChange={(event, newValue) => {
+              setMqttSetting({...mqttSetting, locale: newValue});
+            }}
+            renderInput={(params) => (
+              <TextField 
+                {...params} 
+                label={theme.i18n('AppSettingsDialog','localeLabel', defaultText)} 
+                variant="outlined" 
+                fullWidth 
               />
-            }
-            label="Qos"
-            labelPlacement="start"
-            className={classes.margin} 
+            )}
           />
-          <InputLabel className={classes.margin}  error={!mqttSetting.publishTo.message}>Message</InputLabel>
-          <TextareaAutosize 
-            error="true"
-            aria-label="message" 
-            placeholder="Message" 
-            rowsMin="3" 
-            className={classes.textarea}  
-            onChange={handleTopicChange('message')}
-            value={mqttSetting.publishTo.message}
+          </FormControl>
+          <Typography>Filter</Typography>
+          <FormGroup fullWidth className={`${classes.margin} ${classes.timeControl}`}>
+          <TextField
+            id="startTime"
+            label={theme.i18n('AppSettingsDialog','startTimeLabel', defaultText)} 
+            type="datetime-local"
+            defaultValue=""
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
-          {/* <FormControlLabel
-            control={
-            }
-            label="Message"
-            labelPlacement="start"
-            className={classes.margin} 
-          /> */}
+          <Typography className={classes.toText}>
+            {theme.i18n('AppSettingsDialog','toLabel', defaultText)}
+          </Typography>
+          <TextField
+            id="endTime"
+            label={theme.i18n('AppSettingsDialog','endTimeLabel', defaultText)} 
+            type="datetime-local"
+            defaultValue=""
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          </FormGroup>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

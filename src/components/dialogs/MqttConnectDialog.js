@@ -160,7 +160,7 @@ export default function MqttConnectDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Cancel
+            Close
           </Button>
           <Button onClick={handlDisconnect} color="primary" disabled={mqttState.status !== 'connected' || !mqttState.mqtt?.connected}>
             Disconnect

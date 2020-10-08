@@ -14,6 +14,7 @@ export default function MqttSettingProvider({ children }){
     topic: ['', 0],
     subscribeTo: {topic: '', qos: 0, converter: 'default'},
     publishTo: {topic: '', qos: 0},
+    locale: 'zhTW'
   })
 
   return <MqttSettingContext.Provider value={[mqttSetting, setMqttSetting]}>{children}</MqttSettingContext.Provider>

@@ -2,6 +2,7 @@ import React from 'react'
 import MqttConnectDialog from 'components/dialogs/MqttConnectDialog';
 import MqttSubscribeDialog from 'components/dialogs/MqttSubscribeDialog';
 import MqttPublishDialog from 'components/dialogs/MqttPublishDialog';
+import AppSettingsDialog from 'components/dialogs/AppSettingsDialog';
 
 export default function DialogWrapper(props) {
     const {
@@ -21,6 +22,10 @@ export default function DialogWrapper(props) {
             <MqttPublishDialog 
                 open={open.openPublishDialog}
                 onChange={openDialogs.publish}
+            />
+            <AppSettingsDialog 
+                open={open.openSettingsDialog}
+                onChange={openDialogs.settings}
             />
         </>
     )

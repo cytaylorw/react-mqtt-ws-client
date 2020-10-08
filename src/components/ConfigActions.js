@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
@@ -46,18 +46,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const defaultText = {
+  connect: 'Connect',
+  disconnect: 'Disconnect',
+  subscribe: 'Subscribe',
+  unsubscribe: 'Unsubscribe',
+  publish: 'Publish',
+  settings: 'Settings'
+}
+
 export default function ConfigActions(props) {
   const {
       hidden,
-      onConnectClick,
-      onSubscribeClick,
-      onPublishClick,
       onClick
   } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 //   const [mqttSetting, setMqttSetting] = React.useContext(MqttSettingContext);
   const [mqttState, dispatch] = React.useContext(MqttContext);
+  const theme = useTheme();
+  // console.log(theme)
 
   const handleClose = () => {
     setOpen(false);
@@ -67,10 +75,11 @@ export default function ConfigActions(props) {
     setOpen(true);
   };
 
-  const handleConnect = () => {
-    handleClose();
-    // onConnectClick(true);
-    onClick('connect')
+  const handleOpenDialog = (dialog) => {
+    return () => {
+      handleClose();
+      onClick(dialog);
+    }
   }
 
   const handleDisconnect = () =>{
@@ -81,57 +90,42 @@ export default function ConfigActions(props) {
     if(mqttState.subscribedTo.topic) dispatch({type: 'unsubscribe', dispatch});
   }
 
-  const handleSubscribe = () => {
-    if(true || mqttState.status === 'connected'){
-        handleClose();
-        // onSubscribeClick(true);
-        onClick('subscribe')
-    }
-  }
-
-  const handlePublish = () => {
-    if(true || mqttState.status === 'connected'){
-        handleClose();
-        // onPublishClick(true);
-        onClick('publish')
-    }
-  }
-
   const actions = [
     { 
         icon: <InputIcon />, 
-        name: 'Connect', 
-        handler: handleConnect, 
+        name: theme.i18n('MqttCommon','connect', defaultText),
+        handler: handleOpenDialog('connect'), 
         open: true
     },
     { 
         icon: <CancelPresentationIcon />, 
-        name: 'Disconnect', 
+        name: theme.i18n('MqttCommon','disconnect', defaultText), 
         handler: handleDisconnect, 
         open: mqttState.status === 'connected' && mqttState.mqtt.connected
     },
     { 
         icon: <AddToQueueIcon />, 
-        name: 'Subscribe', 
-        handler: handleSubscribe,
+        name: theme.i18n('MqttCommon','subscribe', defaultText), 
+        handler: handleOpenDialog('subscribe'),
         open: mqttState.status === 'connected' && mqttState.mqtt.connected
     },
     { 
         icon: <RemoveFromQueueIcon />, 
-        name: 'Unsubscribe',
+        name: theme.i18n('MqttCommon','unsubscribe', defaultText),
         handler: handleUnsubscribe,
         open: mqttState.subscribedTo.topic && mqttState.mqtt.connected
     },
     { 
         icon: <PublishIcon />, 
-        name: 'Publish' ,
-        handler: handlePublish,
+        name: theme.i18n('MqttCommon','publish', defaultText),
+        handler: handleOpenDialog('publish'),
         open: mqttState.status === 'connected' && mqttState.mqtt.connected 
     },
     { 
-        icon: <HistoryIcon />, 
-        name: 'History',
-        open: mqttState.messages.length > 0
+        icon: <SettingsIcon />, 
+        name: theme.i18n('MuiConfigActions','settings', defaultText),
+        handler: handleOpenDialog('settings'),
+        open: true
     },
   ];
 

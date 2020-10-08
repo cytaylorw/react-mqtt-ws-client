@@ -11,11 +11,13 @@ function App() {
   const [openConnectDialog, setOpenConnectDialog] = React.useState(false);
   const [openSubscribeDialog, setOpenSubscribeDialog] = React.useState(false);
   const [openPublishDialog, setOpenPublishDialog] = React.useState(false);
+  const [openSettingsDialog, setOpenSettingsDialog] = React.useState(true);
 
   const openDialogs = {
     connect: setOpenConnectDialog,
     subscribe: setOpenSubscribeDialog,
-    publish: setOpenPublishDialog
+    publish: setOpenPublishDialog,
+    settings: setOpenSettingsDialog
   }
 
   const setOpenDialog = (name) => {
@@ -35,7 +37,7 @@ function App() {
       />
       <AlertMessage></AlertMessage>
       <DialogWrapper 
-        open={{openConnectDialog, openSubscribeDialog, openPublishDialog}}
+        open={{openConnectDialog, openSubscribeDialog, openPublishDialog, openSettingsDialog}}
         openDialogs={openDialogs}
       />
     </>

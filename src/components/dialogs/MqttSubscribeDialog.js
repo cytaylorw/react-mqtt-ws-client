@@ -154,7 +154,7 @@ export default function MqttLoginDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Cancel
+            Close
           </Button>
           <Button onClick={handlUnsubscribe} color="primary" disabled={!mqttState.subscribedTo.topic || !mqttState.mqtt.connected}>
             Unsubscribe

@@ -43,6 +43,7 @@ const messageConverter = {
 const types = [
     {value: 'default', label: 'Default'},
     {value: 'defaultFull', label: 'Default(Full)'},
+    {value: 'test', label: 'test'},
 ]
 
 export { messageConverter, columns, collpasedColumns, types };

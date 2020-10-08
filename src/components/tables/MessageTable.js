@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Collapse from '@material-ui/core/Collapse';
 import IconButton from '@material-ui/core/IconButton';
@@ -32,26 +32,13 @@ const useRowStyles = makeStyles((theme) => ({
   }
 }));
 
-// const columns = {
-//     time: 'Time',
-//     topic: 'Topic',
-//     // qos: 'QoS',
-//     // retain: 'Retained',
-//     // dup: 'Duplicate',
-//     message: 'Message'
-// }
+const defaultText = {
+  rowsPerPage: 'rows per page'
+}
 
-// const collpasedColumns = {
-//     // time: 'Time',
-//     // topic: 'Topic',
-//     qos: 'QoS',
-//     retain: 'Retained',
-//     dup: 'Duplicate',
-//     // message: 'Message'
-// }
-
-export default function CollapsibleTable() {
+export default function MessageTable() {
   const classes = useRowStyles();
+  const theme = useTheme();
   const [mqttState, dispatch] = React.useContext(MqttContext);
   const [mqttSetting, setMqttSetting] = React.useContext(MqttSettingContext);
   const [page, setPage] = React.useState(0);
@@ -82,7 +69,7 @@ export default function CollapsibleTable() {
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{
-                inputProps: { 'aria-label': 'rows per page' },
+                inputProps: { 'aria-label': theme.i18n('MessageTable','rowsPerPage', defaultText) },
                 native: true,
               }}
               onChangePage={handleChangePage}
@@ -119,7 +106,7 @@ export default function CollapsibleTable() {
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{
-                inputProps: { 'aria-label': 'rows per page' },
+                inputProps: { 'aria-label': theme.i18n('MessageTable','rowsPerPage', defaultText) },
                 native: true,
               }}
               onChangePage={handleChangePage}
