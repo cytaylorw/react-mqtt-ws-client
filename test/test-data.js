@@ -12,7 +12,7 @@ client.on('connect', function () {
       if (!err) {
         setInterval(() => {
             publish()
-        },10)
+        },1000)
       }
     })
   })

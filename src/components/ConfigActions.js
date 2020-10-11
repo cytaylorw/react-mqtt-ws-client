@@ -75,11 +75,9 @@ export default function ConfigActions(props) {
     setOpen(true);
   };
 
-  const handleOpenDialog = (dialog) => {
-    return () => {
-      handleClose();
-      onClick(dialog);
-    }
+  const handleOpenDialog = (dialog) => () => {
+    handleClose();
+    onClick(dialog);
   }
 
   const handleDisconnect = () =>{

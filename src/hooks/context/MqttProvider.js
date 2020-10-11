@@ -26,6 +26,7 @@ const ACTIONS = {
 
 let messageBuffer = [{messages: []}];
 let timeoutHandle = null;
+let connectTimeout = null;
 
 const mqttReducer = (state, action) => {
   switch(action.type){
@@ -67,9 +68,10 @@ const mqttReducer = (state, action) => {
         instance.on('error', (error) => state.dispatch({type: ACTIONS.ON_ERROR, error}));
         instance.on('message', (topic, message, packet) => state.dispatch({type: ACTIONS.ON_MESSAGE, topic, message, packet}));
         state.setAlert(['info', `Connecting to ${mqttSetting.url}...`])
+        connectTimeout = setTimeout(() => state.setAlert(['error', `Connection timeout.`]), 5000)
         return {...state, mqtt:instance};
       } catch (error) {
-        // console.log(JSON.stringify(error))
+        console.log(JSON.stringify(error))
         state.setAlert(['error', error])
         return state;
       }
@@ -137,6 +139,7 @@ const mqttReducer = (state, action) => {
     case ACTIONS.UPDATE_STATUS:
     case ACTIONS.ON_CONNECT:
       state.clearAlert();
+      clearTimeout(connectTimeout);
     case ACTIONS.ON_RECONNECT:
     case ACTIONS.ON_CLOSE:
     case ACTIONS.ON_OFFLINE:

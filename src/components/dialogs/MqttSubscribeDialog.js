@@ -15,6 +15,8 @@ import Select from '@material-ui/core/Select';
 import { MqttSettingContext, MqttContext, AlertContext} from 'hooks/context/Contexts';
 import { types, messageConverter } from 'lib/converter/MessageConverter';
 
+// console.log(MqttSettingContext)
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -39,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MqttLoginDialog(props) {
+export default function MqttSubscribeDialog(props) {
   const classes = useStyles();
   const {open, onChange} = props;
 //   const [open, setOpen] = React.useState(false);

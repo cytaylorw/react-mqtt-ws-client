@@ -16,7 +16,7 @@ import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import { MqttContext, MqttSettingContext } from 'hooks/context/Contexts';
+import { AppSettingContext, MqttContext, MqttSettingContext } from 'hooks/context/Contexts';
 import ActionsRow from 'components/tables/ActionsRow';
 import MessageRow from 'components/tables/MessageRow';
 import { columns, collpasedColumns } from 'lib/converter/MessageConverter';
@@ -41,6 +41,7 @@ export default function MessageTable() {
   const theme = useTheme();
   const [mqttState, dispatch] = React.useContext(MqttContext);
   const [mqttSetting, setMqttSetting] = React.useContext(MqttSettingContext);
+  const [appSetting, setAppSetting] = React.useContext(AppSettingContext);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -49,6 +50,23 @@ export default function MessageTable() {
     columns['default'];
   const colSpan = Object.keys(tableColumns).length+1;
   const pageOptions = [10, 25, 50, 100];
+  const filtered = mqttState.messages.filter((message) => {
+    if(appSetting.filter.time[0]){
+      let time = new Date(appSetting.filter.time[0]);
+      // time.setSeconds(0,0);
+      if(message.time < time.getTime()) return false;
+    }
+    if(appSetting.filter.time[1]){
+      let time = new Date(appSetting.filter.time[1]);
+      // time.setSeconds(0,0);
+      if(message.time > time.getTime()) return false;
+    }
+    if(appSetting.filter.text[0] && appSetting.filter.text[1]){
+      let regex =  new RegExp(appSetting.filter.text[1], 'i');
+      if(!regex.test(message[appSetting.filter.text[0]])) return false;
+    }
+    return true;
+  })
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -89,7 +107,7 @@ export default function MessageTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-          {[...mqttState.messages].reverse().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((message, index) => (
+          {filtered.reverse().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((message, index) => (
               <MessageRow 
                 key={index} 
                 row={message}
