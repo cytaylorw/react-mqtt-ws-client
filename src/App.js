@@ -11,7 +11,7 @@ function App() {
   const [openConnectDialog, setOpenConnectDialog] = React.useState(false);
   const [openSubscribeDialog, setOpenSubscribeDialog] = React.useState(false);
   const [openPublishDialog, setOpenPublishDialog] = React.useState(false);
-  const [openSettingsDialog, setOpenSettingsDialog] = React.useState(true);
+  const [openSettingsDialog, setOpenSettingsDialog] = React.useState(false);
 
   const openDialogs = {
     connect: setOpenConnectDialog,
