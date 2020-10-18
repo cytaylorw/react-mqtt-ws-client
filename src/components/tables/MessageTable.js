@@ -1,9 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -11,22 +7,14 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
 import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { AppSettingContext, MqttContext, MqttSettingContext } from 'hooks/context/Contexts';
 import ActionsRow from 'components/tables/ActionsRow';
 import MessageRow from 'components/tables/MessageRow';
 import { columns, collpasedColumns } from 'lib/converter/MessageConverter';
 
 const useRowStyles = makeStyles((theme) => ({
-  root: {
-    '& > *': {
-      borderBottom: 'unset',
-    },
-  },
   container: {
       marginTop: theme.spacing(2),
   }
@@ -39,9 +27,9 @@ const defaultText = {
 export default function MessageTable() {
   const classes = useRowStyles();
   const theme = useTheme();
-  const [mqttState, dispatch] = React.useContext(MqttContext);
-  const [mqttSetting, setMqttSetting] = React.useContext(MqttSettingContext);
-  const [appSetting, setAppSetting] = React.useContext(AppSettingContext);
+  const [mqttState, ] = React.useContext(MqttContext);
+  const [mqttSetting, ] = React.useContext(MqttSettingContext);
+  const [appSetting, ] = React.useContext(AppSettingContext);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -53,12 +41,10 @@ export default function MessageTable() {
   const filtered = mqttState.messages.filter((message) => {
     if(appSetting.filter.time[0]){
       let time = new Date(appSetting.filter.time[0]);
-      // time.setSeconds(0,0);
       if(message.time < time.getTime()) return false;
     }
     if(appSetting.filter.time[1]){
       let time = new Date(appSetting.filter.time[1]);
-      // time.setSeconds(0,0);
       if(message.time > time.getTime()) return false;
     }
     if(appSetting.filter.text[0] && appSetting.filter.text[1]){
@@ -77,9 +63,9 @@ export default function MessageTable() {
   };
   return (
     <Container maxWidth="xl" className={classes.container}>
-        <TableContainer component={Paper}>
+      <TableContainer component={Paper}>
         <Table size="small" aria-label="collapsible table">
-        <TableHead>
+          <TableHead>
             <ActionsRow
               rowsPerPageOptions={pageOptions}
               colSpan={colSpan}
@@ -100,14 +86,11 @@ export default function MessageTable() {
                 {Object.entries(tableColumns).map(([key, column]) => (
                     <TableCell key={key}>{column}</TableCell>
                 ))}
-                {/* <TableCell align="right">Calories</TableCell>
-                <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                <TableCell align="right">Protein&nbsp;(g)</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
-          {filtered.reverse().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((message, index) => (
+          {filtered.reverse().slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+          .map((message, index) => (
               <MessageRow 
                 key={index} 
                 row={message}
@@ -132,7 +115,7 @@ export default function MessageTable() {
             />
           </TableFooter>
         </Table>
-        </TableContainer>
+      </TableContainer>
     </Container>
   );
 }

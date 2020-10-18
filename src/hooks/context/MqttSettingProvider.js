@@ -1,5 +1,4 @@
 import React from 'react';
-import os from 'os';
 import useLocalStorage from 'hooks/useLocalStorage';
 import { MqttSettingContext } from 'hooks/context/Contexts';
 

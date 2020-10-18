@@ -9,8 +9,6 @@ const useStyles = makeStyles((theme) => ({
     position: 'fixed',
     top: theme.spacing(10),
     zIndex: 99999,
-    // left: theme.spacing(2),
-    // marginRight: theme.spacing(4),
     '& > * + *': {
       marginTop: theme.spacing(2),
     },
@@ -22,9 +20,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AlertMessage() {
   const classes = useStyles();
-  // const [open, setOpen] = React.useState(false);
   const [alert, setAlert] = React.useContext(AlertContext);
-  // console.log(alert)
   const handleClose = () => {
     setAlert([])
   }

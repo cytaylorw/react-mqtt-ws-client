@@ -3,36 +3,17 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
-import SaveIcon from '@material-ui/icons/Save';
-import PrintIcon from '@material-ui/icons/Print';
-import ShareIcon from '@material-ui/icons/Share';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import InputIcon from '@material-ui/icons/Input';
 import CancelPresentationIcon from '@material-ui/icons/CancelPresentation';
 import SettingsIcon from '@material-ui/icons/Settings';
-import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import AddToQueueIcon from '@material-ui/icons/AddToQueue';
 import RemoveFromQueueIcon from '@material-ui/icons/RemoveFromQueue';
 import PublishIcon from '@material-ui/icons/Publish';
-import HistoryIcon from '@material-ui/icons/History';
-import { MqttSettingContext,  MqttContext} from 'hooks/context/Contexts';
+import { MqttContext } from 'hooks/context/Contexts';
 
 import 'components/ConfigActions.css';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    transform: 'translateZ(0px)',
-    flexGrow: 1,
-  },
-  configActionsWrapper: {
-    position: 'relative',
-    marginTop: theme.spacing(3),
-    height: 380,
-  },
-  radioGroup: {
-    margin: theme.spacing(1, 0),
-  },
   speedDial: {
     position: 'fixed',
     '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
@@ -62,10 +43,8 @@ export default function ConfigActions(props) {
   } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-//   const [mqttSetting, setMqttSetting] = React.useContext(MqttSettingContext);
   const [mqttState, dispatch] = React.useContext(MqttContext);
   const theme = useTheme();
-  // console.log(theme)
 
   const handleClose = () => {
     setOpen(false);
@@ -133,14 +112,13 @@ export default function ConfigActions(props) {
           className={`${classes.speedDial} ConfigActions ${hidden ? 'ConfigActions-hide' : ''}`}
           hidden={hidden}
           icon={<SpeedDialIcon />}
-          // icon={<SpeedDialIcon openIcon={<SettingsIcon />}/>}
           onClose={handleClose}
           onOpen={handleOpen}
           open={open}
           direction="up"
         >
-          {actions.map((action) => {
-            if(action.open) return(
+          {actions.map((action) => 
+            action.open ? (
               <SpeedDialAction
                 key={action.name}
                 icon={action.icon}
@@ -148,8 +126,8 @@ export default function ConfigActions(props) {
                 onClick={action.handler}
                 tooltipOpen={action.open}
               />
-            )
-          })}
+            ) : null
+          )}
         </SpeedDial>
   );
 }

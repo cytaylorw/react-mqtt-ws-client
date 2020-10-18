@@ -15,21 +15,9 @@ import Select from '@material-ui/core/Select';
 import { MqttSettingContext, MqttContext, AlertContext} from 'hooks/context/Contexts';
 import { types, messageConverter } from 'lib/converter/MessageConverter';
 
-// console.log(MqttSettingContext)
-
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
   margin: {
     margin: theme.spacing(1),
-  },
-  withoutLabel: {
-    marginTop: theme.spacing(3),
-  },
-  textField: {
-    width: '25ch',
   },
   slider: {
     width: '100px',
@@ -41,20 +29,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const marks = [
+  {
+    value: 0,
+    label: '0'
+  },
+  {
+    value: 1,
+    label: '1'
+  },
+  {
+    value: 2,
+    label: '2'
+  },
+]
+
 export default function MqttSubscribeDialog(props) {
   const classes = useStyles();
   const {open, onChange} = props;
-//   const [open, setOpen] = React.useState(false);
   const [mqttSetting, setMqttSetting] = React.useContext(MqttSettingContext);
   const [mqttState, dispatch] = React.useContext(MqttContext);
-  const [alert, setAlert, clearAlert] = React.useContext(AlertContext);
-  // console.log(mqttSetting)
-  const handleClickOpen = () => {
-    // setOpen(true);
-  };
+  const [, setAlert, ] = React.useContext(AlertContext);
 
   const handleClose = () => {
-    // setOpen(false);
     onChange(false);
   };
 
@@ -71,33 +68,16 @@ export default function MqttSubscribeDialog(props) {
   }
 
   const handleTopicChange = (prop) => (event, value) => {
-    // const index = prop == 'topic' ? 0 : prop = 'qos' ? 1 : -1;
-    // if(index < 0) return;
-    // let array = [...mqttSetting.topic];
-    // array.splice(index, 1, typeof value === 'undefined' ? event.target.value : value);
     setMqttSetting({ 
       ...mqttSetting, 
       subscribeTo : {
         ...mqttSetting.subscribeTo, 
         [prop]: typeof value === 'undefined' ? event.target.value : value}
     });
-    if(prop = 'converter' && !messageConverter[value]) setAlert(['error', 'Selected converter does not exist.'])
+    if(prop === 'converter' && !messageConverter[value]) setAlert(['error', 'Selected converter does not exist.'])
   };
 
-  const marks = [
-    {
-      value: 0,
-      label: '0'
-    },
-    {
-      value: 1,
-      label: '1'
-    },
-    {
-      value: 2,
-      label: '2'
-    },
-  ]
+
 
   return (
       <Dialog fullWidth open={open} onClose={handleClose} aria-labelledby="subscribe-dialog-title">
@@ -123,8 +103,6 @@ export default function MqttSubscribeDialog(props) {
                 defaultValue={mqttSetting.subscribeTo.qos}
                 min={0}
                 max={2}
-                // getAriaValueText={valuetext}
-                aria-labelledby="discrete-slider-always"
                 step={1}
                 marks={marks}
                 valueLabelDisplay="off"
@@ -147,7 +125,6 @@ export default function MqttSubscribeDialog(props) {
                 id: 'converter',
               }}
             >
-              {/* <option aria-label="None" value="" /> */}
               {types.map((type) => (
                 <option key={type.value} value={type.value}>{type.label}</option>
               ))}

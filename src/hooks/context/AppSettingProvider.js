@@ -1,5 +1,4 @@
 import React from 'react';
-import os from 'os';
 import useLocalStorage from 'hooks/useLocalStorage';
 import { AppSettingContext } from 'hooks/context/Contexts';
 

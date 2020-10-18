@@ -18,14 +18,12 @@ const defaultTheme = createMuiTheme({
       fontFamily: '"Roboto", "Noto Sans TC", "Helvetica", "Arial", sans-serif'
     }
 });
-// defaultTheme.typography.fontFamily = 'Noto Sans TC", ' + defaultTheme.typography.fontFamily;
 
 export default function AppThemeProvider(props) {
     const {
         children,
-        // locale
     } = props;
-    const [appSetting, setAppSetting] = React.useContext(AppSettingContext);
+    const [appSetting, ] = React.useContext(AppSettingContext);
     const theme = createMuiTheme(defaultTheme, {
       ...defaultLocales[appSetting.locale], 
       ...locales[appSetting.locale],
