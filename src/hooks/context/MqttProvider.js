@@ -54,8 +54,8 @@ const mqttReducer = (state, action) => {
       try {        
         const instance = mqtt.connect(mqttSetting.url, {
           ...mqttSetting,
-          username: mqttSetting.anonymous ? undefined : mqttSetting.username,
-          password: mqttSetting.anonymous ? undefined : mqttSetting.password,
+          username: mqttSetting.anomynous ? undefined : mqttSetting.username,
+          password: mqttSetting.anomynous ? undefined : mqttSetting.password,
           reconnectPeriod: 0
         });
         instance.on('connect', () => state.dispatch({type: ACTIONS.ON_CONNECT, status: 'connected'}));
