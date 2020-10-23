@@ -12,6 +12,7 @@ export default function AppSettingProvider({ children }){
   const [appSetting, setAppSetting] = useLocalStorage('appSetting', {
     locale: userLang,
     darkMode: prefersDarkMode,
+    filterOn: false,
     filter: {
       time: [null,null],
       text: ['','']

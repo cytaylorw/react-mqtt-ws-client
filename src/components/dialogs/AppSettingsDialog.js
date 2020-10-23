@@ -38,6 +38,8 @@ const defaultText = {
   startTimeLabel: 'Start Time',
   endTimeLabel: 'End Time',
   filter: 'Filter',
+  filterOnLabel: 'Filter On',
+  filterOffLabel: 'Filter Off',
   filterKeyLabel: 'Filter Key',
   filterTextLabel: 'Filter Text',
   langauges: {
@@ -151,7 +153,24 @@ export default function AppSettingsDialog(props) {
               // labelPlacement="start"
             />
           </FormControl>
-          <Typography>{theme.i18n('AppSettingsDialog','filter', defaultText)}</Typography>
+          <Typography variant="subtitle1">{theme.i18n('AppSettingsDialog','filter', defaultText)}</Typography>
+          <FormControl fullWidth className={classes.margin}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={appSetting.filterOn}
+                  onChange={(event, newValue) => {
+                    console.log(newValue)
+                    setAppSetting({...appSetting, filterOn: newValue});
+                  }}
+                  name="filterOn"
+                  color="secondary"
+                />
+              }
+              label={theme.i18n('AppSettingsDialog', appSetting.filterOn ? 'filterOffLabel' : 'filterOnLabel' , defaultText)}
+              // labelPlacement="start"
+            />
+          </FormControl>
           <FormGroup className={`${classes.filterControl}`}>
             <DateTimePicker 
               label={theme.i18n('AppSettingsDialog','startTimeLabel', defaultText)}

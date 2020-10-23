@@ -87,6 +87,8 @@ exports.zhTW = {
         startTimeLabel: '起始時間',
         endTimeLabel: '結束時間',
         filter: '過濾',
+        filterOnLabel: '開啟過濾',
+        filterOffLabel: '關閉過濾',
         filterKeyLabel: '過濾鍵值',
         filterTextLabel: '過濾內容',
         langauges: {

@@ -43,6 +43,8 @@ exports.enUS = {
     //     startTimeLabel: 'Start Time',
     //     endTimeLabel: 'End Time',
     //     filter: 'Filter',
+    //     filterOnLabel: 'Filter On',
+    //     filterOffLabel: 'Filter Off',
     //     filterKeyLabel: 'Filter Key',
     //     filterTextLabel: 'Filter Text',
     //     langauges: {
