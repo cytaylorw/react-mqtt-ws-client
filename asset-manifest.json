@@ -1,29 +1,29 @@
 {
   "files": {
-    "main.css": "/react-mqtt-ws-client/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/react-mqtt-ws-client/static/js/main.72fe6b0c.chunk.js",
-    "main.js.map": "/react-mqtt-ws-client/static/js/main.72fe6b0c.chunk.js.map",
-    "runtime-main.js": "/react-mqtt-ws-client/static/js/runtime-main.731cc29d.js",
-    "runtime-main.js.map": "/react-mqtt-ws-client/static/js/runtime-main.731cc29d.js.map",
-    "static/js/2.bc0df50f.chunk.js": "/react-mqtt-ws-client/static/js/2.bc0df50f.chunk.js",
-    "static/js/2.bc0df50f.chunk.js.map": "/react-mqtt-ws-client/static/js/2.bc0df50f.chunk.js.map",
-    "static/js/3.d733154d.chunk.js": "/react-mqtt-ws-client/static/js/3.d733154d.chunk.js",
-    "static/js/3.d733154d.chunk.js.map": "/react-mqtt-ws-client/static/js/3.d733154d.chunk.js.map",
+    "main.css": "/react-mqtt-ws-client/static/css/main.a07f0b12.chunk.css",
+    "main.js": "/react-mqtt-ws-client/static/js/main.e48c3acc.chunk.js",
+    "main.js.map": "/react-mqtt-ws-client/static/js/main.e48c3acc.chunk.js.map",
+    "runtime-main.js": "/react-mqtt-ws-client/static/js/runtime-main.2f681fa9.js",
+    "runtime-main.js.map": "/react-mqtt-ws-client/static/js/runtime-main.2f681fa9.js.map",
+    "static/js/2.ae449666.chunk.js": "/react-mqtt-ws-client/static/js/2.ae449666.chunk.js",
+    "static/js/2.ae449666.chunk.js.map": "/react-mqtt-ws-client/static/js/2.ae449666.chunk.js.map",
+    "static/js/3.d579a368.chunk.js": "/react-mqtt-ws-client/static/js/3.d579a368.chunk.js",
+    "static/js/3.d579a368.chunk.js.map": "/react-mqtt-ws-client/static/js/3.d579a368.chunk.js.map",
     "static/css/4.90b30399.chunk.css": "/react-mqtt-ws-client/static/css/4.90b30399.chunk.css",
-    "static/js/4.0d660ab3.chunk.js": "/react-mqtt-ws-client/static/js/4.0d660ab3.chunk.js",
-    "static/js/4.0d660ab3.chunk.js.map": "/react-mqtt-ws-client/static/js/4.0d660ab3.chunk.js.map",
+    "static/js/4.398e0f34.chunk.js": "/react-mqtt-ws-client/static/js/4.398e0f34.chunk.js",
+    "static/js/4.398e0f34.chunk.js.map": "/react-mqtt-ws-client/static/js/4.398e0f34.chunk.js.map",
     "index.html": "/react-mqtt-ws-client/index.html",
-    "precache-manifest.de0cf17ba6acc62d145b7ce3b7730db1.js": "/react-mqtt-ws-client/precache-manifest.de0cf17ba6acc62d145b7ce3b7730db1.js",
+    "precache-manifest.2854042ecf9ac7c11a7e7513083c65f9.js": "/react-mqtt-ws-client/precache-manifest.2854042ecf9ac7c11a7e7513083c65f9.js",
     "service-worker.js": "/react-mqtt-ws-client/service-worker.js",
     "static/css/4.90b30399.chunk.css.map": "/react-mqtt-ws-client/static/css/4.90b30399.chunk.css.map",
-    "static/css/main.5ecd60fb.chunk.css.map": "/react-mqtt-ws-client/static/css/main.5ecd60fb.chunk.css.map",
-    "static/js/2.bc0df50f.chunk.js.LICENSE.txt": "/react-mqtt-ws-client/static/js/2.bc0df50f.chunk.js.LICENSE.txt",
-    "static/js/3.d733154d.chunk.js.LICENSE.txt": "/react-mqtt-ws-client/static/js/3.d733154d.chunk.js.LICENSE.txt"
+    "static/css/main.a07f0b12.chunk.css.map": "/react-mqtt-ws-client/static/css/main.a07f0b12.chunk.css.map",
+    "static/js/2.ae449666.chunk.js.LICENSE.txt": "/react-mqtt-ws-client/static/js/2.ae449666.chunk.js.LICENSE.txt",
+    "static/js/3.d579a368.chunk.js.LICENSE.txt": "/react-mqtt-ws-client/static/js/3.d579a368.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.731cc29d.js",
-    "static/js/2.bc0df50f.chunk.js",
-    "static/css/main.5ecd60fb.chunk.css",
-    "static/js/main.72fe6b0c.chunk.js"
+    "static/js/runtime-main.2f681fa9.js",
+    "static/js/2.ae449666.chunk.js",
+    "static/css/main.a07f0b12.chunk.css",
+    "static/js/main.e48c3acc.chunk.js"
   ]
 }
