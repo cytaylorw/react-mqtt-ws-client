@@ -136,7 +136,13 @@ const mqttReducer = (state, action) => {
     case ACTIONS.ON_CLOSE:
     case ACTIONS.ON_OFFLINE:
       return {...state, status: action.status};
-      case ACTIONS.TOGGLE_PAUSE:
+    case ACTIONS.TOGGLE_PAUSE:
+      if(state.pause){
+        state.setAlert(['success', 'Updating messages.']);
+      }else{
+        state.setAlert(['info', 'Pause messages.']);
+      }
+      state.clearAlert(1000);
       return {...state, pause: !state.pause};
     default:
       return state;

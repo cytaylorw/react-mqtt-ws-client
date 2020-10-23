@@ -10,7 +10,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import { AppSettingContext, MqttSettingContext } from 'hooks/context/Contexts';
+import { AppSettingContext, MqttSettingContext, AlertContext } from 'hooks/context/Contexts';
 import { DateTimePicker } from '@material-ui/pickers';
 import { columns, collpasedColumns } from 'lib/converter/MessageConverter';
 import ConfigDialog from 'components/dialogs/ConfigDialog';
@@ -54,6 +54,7 @@ export default function AppSettingsDialog(props) {
   const {open, onChange} = props;
   const [mqttSetting, ] = React.useContext(MqttSettingContext);
   const [appSetting, setAppSetting] = React.useContext(AppSettingContext);
+  const [, setAlert, clearAlert] = React.useContext(AlertContext);
   const theme = useTheme();
   const keys = {...(columns[mqttSetting.subscribeTo.converter] ? columns[mqttSetting.subscribeTo.converter] : columns['default']), ...collpasedColumns[mqttSetting.subscribeTo.converter]};
 
@@ -62,6 +63,8 @@ export default function AppSettingsDialog(props) {
     switch(key){
       case 0:
         if(value && appSetting.filter.time[1] && value.isAfter(appSetting.filter.time[1])){
+          setAlert(['error','Invalid time range.']);
+          clearAlert(2000);
           return;
         }
         if(value) value.set({second:0,millisecond:0})
@@ -70,6 +73,8 @@ export default function AppSettingsDialog(props) {
         break;
       case 1:
         if(value && appSetting.filter.time[0] && value.isBefore(appSetting.filter.time[0])){
+          setAlert(['error','Invalid time range.']);
+          clearAlert(2000);
           return;
         }
         if(value) value.set({second:59,millisecond:999})
