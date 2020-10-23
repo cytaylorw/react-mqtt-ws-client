@@ -1,17 +1,12 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Slider from '@material-ui/core/Slider';
 import InputLabel from '@material-ui/core/InputLabel';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import { MqttSettingContext,  MqttContext} from 'hooks/context/Contexts';
+import ConfigDialog from 'components/dialogs/ConfigDialog';
+import QosSlider from 'components/inputs/QosSlider';
+import TopicTextField from 'components/inputs/TopicTextField';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -29,30 +24,20 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const marks = [
-  {
-    value: 0,
-    label: '0'
-  },
-  {
-    value: 1,
-    label: '1'
-  },
-  {
-    value: 2,
-    label: '2'
-  },
-]
+const defaultText = {
+  publishBtn: 'Publish',
+  title: 'Publish',
+  contentText: 'Publish a MQTT message.',
+  messageLabel: 'Message',
+  messagePlaceholder: 'Enter a MQTT message'
+}
 
 export default function MqttPublishDialog(props) {
+  const theme = useTheme();
   const classes = useStyles();
   const {open, onChange} = props;
   const [mqttSetting, setMqttSetting] = React.useContext(MqttSettingContext);
   const [mqttState, dispatch] = React.useContext(MqttContext);
-
-  const handleClose = () => {
-    onChange(false);
-  };
 
   const handlePublish = () => {
     dispatch({type: 'publish', setting: mqttSetting});
@@ -68,59 +53,46 @@ export default function MqttPublishDialog(props) {
   };
 
   return (
-      <Dialog fullWidth open={open} onClose={handleClose} aria-labelledby="publish-dialog-title">
-        <DialogTitle id="publish-dialog-title">Publish</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Publish to a MQTT topic.
-          </DialogContentText>
-          <TextField
-            error={!mqttSetting.publishTo.topic}
-            autoFocus
-            id="topic"
-            label="Topic"
-            type="text"
-            fullWidth
-            className={classes.margin} 
+    <ConfigDialog
+      open={open}
+      onChange={onChange}
+      title={theme.i18n('MqttPublishDialog','title', defaultText)}
+      contentText={theme.i18n('MqttPublishDialog','contentText', defaultText)}
+      content={(
+        <>
+          <TopicTextField
             onChange={handleTopicChange('topic')}
-            value={mqttSetting.publishTo.topic}
+            value={mqttSetting.subscribeTo.topic}
+            error={!mqttSetting.subscribeTo.topic}
           />
-          <FormControlLabel
-            control={
-              <Slider
-                defaultValue={mqttSetting.publishTo.qos}
-                min={0}
-                max={2}
-                step={1}
-                marks={marks}
-                valueLabelDisplay="off"
-                className={classes.slider} 
-                onChange={handleTopicChange('qos')}
-              />
-            }
-            label="Qos"
-            labelPlacement="start"
-            className={classes.margin} 
+          <QosSlider
+            value={mqttSetting.subscribeTo.qos}
+            onChange={handleTopicChange('qos')}
           />
-          <InputLabel className={classes.margin}  error={!mqttSetting.publishTo.message}>Message</InputLabel>
+          <InputLabel className={classes.margin}  error={!mqttSetting.publishTo.message}>{theme.i18n('MqttPublishDialog','messageLabel', defaultText)}</InputLabel>
           <TextareaAutosize 
             error="true"
             aria-label="message" 
-            placeholder="Message" 
+            placeholder={theme.i18n('MqttPublishDialog','messagePlaceholder', defaultText)} 
             rowsMin="3" 
             className={classes.textarea}  
             onChange={handleTopicChange('message')}
             value={mqttSetting.publishTo.message}
           />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Close
+        </>
+      )}
+      buttons={(
+        <>
+          <Button 
+            onClick={handlePublish} 
+            color="primary" 
+            disabled={!mqttState.mqtt?.connected || !mqttSetting.publishTo.topic || !mqttSetting.publishTo.message}
+            variant={theme.palette.type === 'dark' ? 'contained' : 'text'}
+          >
+            {theme.i18n('MqttPublishDialog','publishBtn', defaultText)}
           </Button>
-          <Button onClick={handlePublish} color="primary" disabled={!mqttState.mqtt?.connected || !mqttSetting.publishTo.topic || !mqttSetting.publishTo.message}>
-            Publish
-          </Button>
-        </DialogActions>
-      </Dialog>
+        </>
+      )}
+    />
   );
 }

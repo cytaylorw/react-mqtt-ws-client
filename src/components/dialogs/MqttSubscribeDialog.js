@@ -1,17 +1,12 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import InputLabel from '@material-ui/core/InputLabel';
-import Slider from '@material-ui/core/Slider';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Select from '@material-ui/core/Select';
+import ConfigDialog from 'components/dialogs/ConfigDialog';
+import QosSlider from 'components/inputs/QosSlider';
+import TopicTextField from 'components/inputs/TopicTextField';
 import { MqttSettingContext, MqttContext, AlertContext} from 'hooks/context/Contexts';
 import { types, messageConverter } from 'lib/converter/MessageConverter';
 
@@ -29,31 +24,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const marks = [
-  {
-    value: 0,
-    label: '0'
-  },
-  {
-    value: 1,
-    label: '1'
-  },
-  {
-    value: 2,
-    label: '2'
-  },
-]
+const defaultText = {
+  subscribeBtn: 'Subscribe',
+  unsubscribeBtn: 'Unsubscribe',
+  title: 'Subscribe',
+  contentText: 'Subscribe to a MQTT topic.',
+  converterLabel: 'Converter',
+}
 
 export default function MqttSubscribeDialog(props) {
+  const theme = useTheme();
   const classes = useStyles();
   const {open, onChange} = props;
   const [mqttSetting, setMqttSetting] = React.useContext(MqttSettingContext);
   const [mqttState, dispatch] = React.useContext(MqttContext);
   const [, setAlert, ] = React.useContext(AlertContext);
-
-  const handleClose = () => {
-    onChange(false);
-  };
 
   const handleSubscribe = () => {
     if(!messageConverter[mqttSetting.subscribeTo.converter]){
@@ -80,42 +65,24 @@ export default function MqttSubscribeDialog(props) {
 
 
   return (
-      <Dialog fullWidth open={open} onClose={handleClose} aria-labelledby="subscribe-dialog-title">
-        <DialogTitle id="subscribe-dialog-title">Subscribe</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Subscribe to a MQTT topic.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            id="topic"
-            label="Topic"
-            type="text"
-            fullWidth
-            className={classes.margin} 
+    <ConfigDialog
+      open={open}
+      onChange={onChange}
+      title={theme.i18n('MqttSubscribeDialog','title', defaultText)}
+      contentText={theme.i18n('MqttSubscribeDialog','contentText', defaultText)}
+      content={(
+        <>
+          <TopicTextField
             onChange={handleTopicChange('topic')}
             value={mqttSetting.subscribeTo.topic}
             error={!mqttSetting.subscribeTo.topic}
           />
-          <FormControlLabel
-            control={
-              <Slider
-                defaultValue={mqttSetting.subscribeTo.qos}
-                min={0}
-                max={2}
-                step={1}
-                marks={marks}
-                valueLabelDisplay="off"
-                className={classes.slider} 
-                onChange={handleTopicChange('qos')}
-              />
-            }
-            label="Qos"
-            labelPlacement="start"
-            className={classes.margin} 
+          <QosSlider
+            value={mqttSetting.subscribeTo.qos}
+            onChange={handleTopicChange('qos')}
           />
           <FormControl className={classes.formControl} error={!messageConverter[mqttSetting.subscribeTo.converter]}>
-            <InputLabel htmlFor="age-native-simple">Converter</InputLabel>
+            <InputLabel htmlFor="age-native-simple">{theme.i18n('MqttSubscribeDialog','converterLabel', defaultText)}</InputLabel>
             <Select
               native
               value={mqttSetting.subscribeTo.converter}
@@ -129,19 +96,29 @@ export default function MqttSubscribeDialog(props) {
                 <option key={type.value} value={type.value}>{type.label}</option>
               ))}
             </Select>
-        </FormControl>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Close
+          </FormControl>
+        </>
+      )}
+      buttons={(
+        <>
+          <Button 
+            onClick={handleSubscribe} 
+            color="primary" 
+            disabled={!messageConverter[mqttSetting.subscribeTo.converter] || !mqttSetting.subscribeTo.topic}
+            variant={theme.palette.type === 'dark' ? 'contained' : 'text'}
+          >
+            {theme.i18n('MqttSubscribeDialog','subscribeBtn', defaultText)}
           </Button>
-          <Button onClick={handlUnsubscribe} color="primary" disabled={!mqttState.subscribedTo.topic || !mqttState.mqtt.connected}>
-            Unsubscribe
+          <Button 
+            onClick={handlUnsubscribe} 
+            color="primary" 
+            disabled={!mqttState.subscribedTo.topic || !mqttState.mqtt.connected}
+            variant={theme.palette.type === 'dark' ? 'contained' : 'text'}
+          >
+            {theme.i18n('MqttSubscribeDialog','unsubscribeBtn', defaultText)}
           </Button>
-          <Button onClick={handleSubscribe} color="primary" disabled={!messageConverter[mqttSetting.subscribeTo.converter] || !mqttSetting.subscribeTo.topic}>
-            Subscribe
-          </Button>
-        </DialogActions>
-      </Dialog>
+        </>
+      )}
+    />
   );
 }

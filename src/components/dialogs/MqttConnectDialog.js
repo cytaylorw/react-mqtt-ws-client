@@ -1,12 +1,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import Switch from '@material-ui/core/Switch';
@@ -17,6 +12,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { MqttSettingContext,  MqttContext} from 'hooks/context/Contexts';
+import ConfigDialog from 'components/dialogs/ConfigDialog';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -24,9 +20,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const defaultText = {
+  connectBtn: 'Connect',
+  disconnectBtn: 'Disconnect',
+  title: 'Connect to MQTT',
+  contentText: 'Connect to a MQTT server over WebSocket.',
+  urlLabel: 'URL',
+  clientIdLabel: 'Client ID',
+  anomynousLabel: 'Anomynous',
+  basicAuthLabel: 'Basic Authentication',
+  usernameLabel: 'Username',
+  passwordLabel: 'Password'
+}
 
 export default function MqttConnectDialog(props) {
   const classes = useStyles();
+  const theme = useTheme();
   const {open, onChange} = props;
   const [showPassword, setShowPassword] = React.useState(false);
   const [mqttSetting, setMqttSetting] = React.useContext(MqttSettingContext);
@@ -34,10 +43,6 @@ export default function MqttConnectDialog(props) {
 
   const connectDisabled = mqttState.mqtt?.connected || !mqttSetting.url || !mqttSetting.clientId || 
     (!mqttSetting.anomynous && (!mqttSetting.username || !mqttSetting.password));
-
-  const handleClose = () => {
-    onChange(false);
-  };
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -56,7 +61,6 @@ export default function MqttConnectDialog(props) {
   }
 
   const handleChange = (prop) => (event) => {
-    console.log(event.target.checked)
     setMqttSetting({ 
       ...mqttSetting, 
       [prop]: event.target.type === 'checkbox' ? event.target.checked : event.target.value 
@@ -69,15 +73,17 @@ export default function MqttConnectDialog(props) {
         fullWidth 
         className={classes.margin} 
         id="mqtt-username" 
-        label="Username"
+        label={theme.i18n('MqttConnectDialog','usernameLabel', defaultText)}
         value={mqttSetting.username}
         onChange={handleChange('username')}
         error={!mqttSetting.username}
       />
       <FormControl fullWidth className={classes.margin}>
-        <InputLabel htmlFor="standard-adornment-password" error={!mqttSetting.password}>Password</InputLabel>
+        <InputLabel htmlFor="standard-adornment-password" error={!mqttSetting.password}>
+          {theme.i18n('MqttConnectDialog','passwordLabel', defaultText)}
+        </InputLabel>
         <Input
-          id="standard-adornment-password"
+          id="mqtt-password"
           type={showPassword ? 'text' : 'password'}
           value={mqttSetting.password}
           onChange={handleChange('password')}
@@ -99,14 +105,15 @@ export default function MqttConnectDialog(props) {
   )
 
   return (
-      <Dialog fullWidth open={open} onClose={handleClose} aria-labelledby="connect-dialog-title">
-        <DialogTitle id="connect-dialog-title">Connect to MQTT</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Connect to a MQTT server over WebSocket.
-          </DialogContentText>
+    <ConfigDialog
+      open={open}
+      onChange={onChange}
+      title={theme.i18n('MqttConnectDialog','title', defaultText)}
+      contentText={theme.i18n('MqttConnectDialog','contentText', defaultText)}
+      content={(
+        <>
           <FormControl fullWidth className={classes.margin} error={!mqttSetting.url}>
-            <InputLabel htmlFor="standard-adornment-amount">URL</InputLabel>
+            <InputLabel htmlFor="standard-adornment-amount">{theme.i18n('MqttConnectDialog','urlLabel', defaultText)}</InputLabel>
             <Input
               id="standard-adornment-url"
               value={mqttSetting.url}
@@ -118,7 +125,7 @@ export default function MqttConnectDialog(props) {
             fullWidth 
             className={classes.margin} 
             id="mqtt-clientId" 
-            label="Client ID"
+            label={theme.i18n('MqttConnectDialog','clientIdLabel', defaultText)}
             value={mqttSetting.clientId}
             onChange={handleChange('clientId')}
             error={!mqttSetting.clientId}
@@ -130,26 +137,36 @@ export default function MqttConnectDialog(props) {
                   checked={mqttSetting.anomynous}
                   onChange={handleChange('anomynous')}
                   name="anomynous"
-                  color="primary"
+                  color="secondary"
                 />
               }
-              label="Anomynous"
+              label={theme.i18n('MqttConnectDialog',mqttSetting.anomynous ? 'anomynousLabel' : 'basicAuthLabel', defaultText)}
               // labelPlacement="start"
             />
           </FormControl>
           {mqttSetting.anomynous ? null : credentialInputs}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Close
+        </>
+      )}
+      buttons={(
+        <>
+          <Button 
+            onClick={handleConnect} 
+            color="primary" 
+            disabled={connectDisabled}
+            variant={theme.palette.type === 'dark' ? 'contained' : 'text'}
+          >
+            {theme.i18n('MqttConnectDialog','connectBtn', defaultText)}
           </Button>
-          <Button onClick={handlDisconnect} color="primary" disabled={mqttState.status !== 'connected' || !mqttState.mqtt?.connected}>
-            Disconnect
+          <Button 
+            onClick={handlDisconnect} 
+            color="primary" 
+            disabled={mqttState.status !== 'connected' || !mqttState.mqtt?.connected}
+            variant={theme.palette.type === 'dark' ? 'contained' : 'text'}
+          >
+            {theme.i18n('MqttConnectDialog','disconnectBtn', defaultText)}
           </Button>
-          <Button onClick={handleConnect} color="primary" disabled={connectDisabled}>
-            Connect
-          </Button>
-        </DialogActions>
-      </Dialog>
+        </>
+      )}
+    />
   );
 }

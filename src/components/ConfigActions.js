@@ -70,37 +70,37 @@ export default function ConfigActions(props) {
   const actions = [
     { 
         icon: <InputIcon />, 
-        name: theme.i18n('MqttCommon','connect', defaultText),
+        name: theme.i18n('ConfigActions','connect', defaultText),
         handler: handleOpenDialog('connect'), 
         open: true
     },
     { 
         icon: <CancelPresentationIcon />, 
-        name: theme.i18n('MqttCommon','disconnect', defaultText), 
+        name: theme.i18n('ConfigActions','disconnect', defaultText), 
         handler: handleDisconnect, 
         open: mqttState.status === 'connected' && mqttState.mqtt.connected
     },
     { 
         icon: <AddToQueueIcon />, 
-        name: theme.i18n('MqttCommon','subscribe', defaultText), 
+        name: theme.i18n('ConfigActions','subscribe', defaultText), 
         handler: handleOpenDialog('subscribe'),
         open: mqttState.status === 'connected' && mqttState.mqtt.connected
     },
     { 
         icon: <RemoveFromQueueIcon />, 
-        name: theme.i18n('MqttCommon','unsubscribe', defaultText),
+        name: theme.i18n('ConfigActions','unsubscribe', defaultText),
         handler: handleUnsubscribe,
         open: mqttState.subscribedTo.topic && mqttState.mqtt.connected
     },
     { 
         icon: <PublishIcon />, 
-        name: theme.i18n('MqttCommon','publish', defaultText),
+        name: theme.i18n('ConfigActions','publish', defaultText),
         handler: handleOpenDialog('publish'),
         open: mqttState.status === 'connected' && mqttState.mqtt.connected 
     },
     { 
         icon: <SettingsIcon />, 
-        name: theme.i18n('MuiConfigActions','settings', defaultText),
+        name: theme.i18n('ConfigActions','settings', defaultText),
         handler: handleOpenDialog('settings'),
         open: true
     },

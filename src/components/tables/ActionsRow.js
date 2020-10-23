@@ -80,7 +80,12 @@ TablePaginationActions.propTypes = {
 
 const useStyles2 = makeStyles((theme) => ({
   control: {
-    fontWeight: 400
+    fontWeight: 400,
+    cursor: 'pointer',
+    color: theme.palette.text.primary,
+    "&:hover": {
+      color: theme.palette.text.secondary
+    }
   },
 }));
 

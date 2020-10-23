@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
@@ -12,7 +12,15 @@ const useStyles = makeStyles((theme) => ({
     title: {
       flexGrow: 1,
     },
+    formMargin: {
+        marginLeft: theme.spacing(1),
+    },
 }));
+
+const defaultText = {
+    hideButton: 'Hide button',
+    showButton: 'Show button'
+}
 
 export default function NavBar(props) {
     const {
@@ -20,6 +28,7 @@ export default function NavBar(props) {
         onChange
     } = props;
     const classes = useStyles();
+    const theme = useTheme();
 
     
     const handleHiddenChange = (event) => {
@@ -27,15 +36,16 @@ export default function NavBar(props) {
     };
 
     return (
-        <AppBar position="static">
+        <AppBar position="fixed">
             <Toolbar>
                 <Typography variant="h6" className={classes.title}>
                     {process.env.REACT_APP_WEBSITE_NAME}
                 </Typography>
                 <MqttStatus></MqttStatus>
                 <FormControlLabel
-                    control={<Switch checked={hidden} onChange={handleHiddenChange} color="secondary" />}
-                    label="Hide Button"
+                    className={classes.formMargin}
+                    control={<Switch checked={hidden} onChange={handleHiddenChange} color="default" />}
+                    label={ theme.i18n('NavBar',hidden ? 'showButton' : 'hideButton', defaultText)}
                 />
             </Toolbar>
         </AppBar>

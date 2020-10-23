@@ -16,7 +16,9 @@ import { columns, collpasedColumns } from 'lib/converter/MessageConverter';
 
 const useRowStyles = makeStyles((theme) => ({
   container: {
-      marginTop: theme.spacing(2),
+      paddingTop: theme.spacing(10),
+      minHeight: '100vh',
+      backgroundColor: theme.palette.background.default 
   }
 }));
 

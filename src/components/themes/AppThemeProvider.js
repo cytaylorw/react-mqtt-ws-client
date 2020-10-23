@@ -12,25 +12,42 @@ moment.locale('en');
 
 const supportLocales = Object.keys(locales);
 
-const defaultTheme = createMuiTheme({
-    supportLocales,
-    typography: {
-      fontFamily: '"Roboto", "Noto Sans TC", "Helvetica", "Arial", sans-serif'
-    }
-});
+const DBCS = ['zhTW','zhCN','koKR','jaJP'];
 
 export default function AppThemeProvider(props) {
     const {
         children,
     } = props;
     const [appSetting, ] = React.useContext(AppSettingContext);
-    const theme = createMuiTheme(defaultTheme, {
-      ...defaultLocales[appSetting.locale], 
-      ...locales[appSetting.locale],
-      i18n: function(component, key, defaultText){ 
-        return this.text && this.text[component] && this.text[component][key] ? this.text[component][key] : defaultText[key]
-      }
-    });
+
+    const theme = React.useMemo(
+      () => createMuiTheme({
+          supportLocales,
+          typography: {
+            fontFamily: '"Roboto", "Noto Sans TC", "Helvetica", "Arial", sans-serif',
+            fontSize: DBCS.includes(appSetting.locale) ? 15 : 14
+          },
+          palette: {
+            type: appSetting.darkMode ? 'dark' : 'light',
+            primary: {
+              light: '#B5C7D3',
+              main: '#658DC6',
+              dark: '#0F4C81'
+            },
+            secondary: {
+              light: '#F2D6AE',
+              main: '#F5B895',
+              dark: '#A58D7F'
+            },
+          },
+          ...defaultLocales[appSetting.locale], 
+          ...locales[appSetting.locale],
+          i18n: function(component, key, defaultText){ 
+            return this.text?.[component]?.[key] ?? defaultText[key]
+          }
+        }),
+      [appSetting.darkMode, appSetting.locale]
+    );
 
     return (
       <ThemeProvider theme={theme}>
