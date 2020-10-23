@@ -12,8 +12,6 @@ moment.locale('en');
 
 const supportLocales = Object.keys(locales);
 
-const DBCS = ['zhTW','zhCN','koKR','jaJP'];
-
 export default function AppThemeProvider(props) {
     const {
         children,
@@ -25,7 +23,6 @@ export default function AppThemeProvider(props) {
           supportLocales,
           typography: {
             fontFamily: '"Roboto", "Noto Sans TC", "Helvetica", "Arial", sans-serif',
-            fontSize: DBCS.includes(appSetting.locale) ? 15 : 14
           },
           palette: {
             type: appSetting.darkMode ? 'dark' : 'light',
