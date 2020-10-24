@@ -40,7 +40,7 @@ export default function MessageTable() {
     columns['default'];
   const colSpan = Object.keys(tableColumns).length+1;
   const pageOptions = [10, 25, 50, 100];
-  const filtered = mqttState.messages.filter((message) => {
+  const filtered = appSetting.filterOn ? mqttState.messages.filter((message) => {
     if(appSetting.filter.time[0]){
       let time = new Date(appSetting.filter.time[0]);
       if(message.time < time.getTime()) return false;
@@ -54,7 +54,7 @@ export default function MessageTable() {
       if(!regex.test(message[appSetting.filter.text[0]])) return false;
     }
     return true;
-  })
+  }) : mqttState.messages;
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
