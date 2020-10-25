@@ -36,7 +36,6 @@ export default function QosSlider(props) {
   const theme = useTheme();
   const classes = useStyles();
   const { value, onChange} = props;
-  console.log(value)
   return (
           <FormControlLabel
             control={

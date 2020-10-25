@@ -55,6 +55,10 @@ exports.zhTW = {
         publish: '發布',
         settings: '設定'
       },
+      MessageTable: {
+        rowsPerPage: '每頁筆數',
+        noMessage: '無訊息可顯示。'
+      },
       NavBar: {
         hideButton: '隱藏按鈕',
         showButton: '顯示按鈕'
@@ -118,5 +122,22 @@ exports.zhTW = {
         messageLabel: '訊息',
         messagePlaceholder: '輸入 MQTT 訊息'
       }
+    },
+    messages: {
+      MQTT_CONNECT: (url) => `${url} 連線中。`,
+      MQTT_CONNECT_TIMEOUT: '連線逾時。',
+      MQTT_DISCONNECT: '斷線中。',
+      MQTT_SUBSCRIBE: (topic) => `${topic} 訂閱中。`,
+      MQTT_SUBSCRIBE_FAIL: (topic) => `無法訂閱 ${topic} 。`,
+      MQTT_UNSUBSCRIBE: (topic) => `${topic} 取消訂閱中。`,
+      MQTT_PUBLISHED: '發布成功。',
+      MQTT_ON_CONNECT: '已連線。',
+      MQTT_ON_CLOSE: '連線關閉。',
+      MQTT_ON_RECONNECT: '重新連線中。',
+      MQTT_ON_OFFLINE: 'MQTT 離線。',
+      MQTT_PLAY: '更新訊息中。',
+      MQTT_PAUSE: '停止訊息更新。',
+      FILTER_INVALID_TIME_RANGE: '無效的時間範圍。',
+      CONVERTER_INVALID: '此轉換器功能不存在。'
     }
   };

@@ -65,7 +65,7 @@ export default function AppSettingsDialog(props) {
     switch(key){
       case 0:
         if(value && appSetting.filter.time[1] && value.isAfter(appSetting.filter.time[1])){
-          setAlert(['error','Invalid time range.']);
+          setAlert(['error','FILTER_INVALID_TIME_RANGE']);
           clearAlert(2000);
           return;
         }
@@ -75,7 +75,7 @@ export default function AppSettingsDialog(props) {
         break;
       case 1:
         if(value && appSetting.filter.time[0] && value.isBefore(appSetting.filter.time[0])){
-          setAlert(['error','Invalid time range.']);
+          setAlert(['error','FILTER_INVALID_TIME_RANGE']);
           clearAlert(2000);
           return;
         }

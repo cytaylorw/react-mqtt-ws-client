@@ -26,6 +26,15 @@ const ACTIONS = {
 let messageBuffer = [{messages: []}];
 let timeoutHandle = null;
 let connectTimeout = null;
+let alertTimeout = null;
+
+const setAlertTimeout = (state, alert) => {
+  clearTimeout(alertTimeout);
+  alertTimeout = setTimeout(() => {
+    state.setAlert(alert);
+    if(alert[0] === 'info' || alert[0] === 'success') state.clearAlert(1000);
+  }, 100)
+}
 
 const mqttReducer = (state, action) => {
   switch(action.type){
@@ -64,8 +73,8 @@ const mqttReducer = (state, action) => {
         instance.on('offline', () => state.dispatch({type: ACTIONS.ON_OFFLINE, status: 'offline'}));
         instance.on('error', (error) => state.dispatch({type: ACTIONS.ON_ERROR, error}));
         instance.on('message', (topic, message, packet) => state.dispatch({type: ACTIONS.ON_MESSAGE, topic, message, packet}));
-        state.setAlert(['info', `Connecting to ${mqttSetting.url}...`])
-        connectTimeout = setTimeout(() => state.setAlert(['error', `Connection timeout.`]), 5000)
+        state.setAlert(['info', 'MQTT_CONNECT', mqttSetting.url]);
+        connectTimeout = setTimeout(() => state.setAlert(['error', 'MQTT_CONNECT_TIMEOUT']), 5000)
         return {...state, mqtt:instance};
       } catch (error) {
         console.log(JSON.stringify(error))
@@ -73,19 +82,19 @@ const mqttReducer = (state, action) => {
         return state;
       }
     case ACTIONS.DISCONNECT:
-      state.setAlert(['info', `Disconnecting...`]);
+      state.setAlert(['info', 'MQTT_DISCONNECT']);
       if(state.mqtt && state.mqtt.connected) state.mqtt.end();
       state.dispatch({type: ACTIONS.UNSUBSCRIBED});
       return state;
     case ACTIONS.SUBSCRIBE:
       if(!state.subscribedTo.topic){
-        state.setAlert(['info', `Subscribing to ${state.subscribedTo.topic}...`]);
+        state.setAlert(['info', 'MQTT_SUBSCRIBE', state.subscribedTo.topic]);
         const topic = {[action.setting.subscribeTo.topic]: {qos: action.setting.subscribeTo.qos}};
         state.mqtt.subscribe(topic, (error, granted) => {
           if(error){
             state.setAlert(['error', error]);
           }else if(granted[0].qos > 2){
-            state.setAlert(['error', 'Failed to subscribe topic.']);
+            state.setAlert(['error', 'MQTT_SUBSCRIBE_FAIL', state.subscribedTo.topic]);
           }else{
             state.dispatch({type: ACTIONS.SUBSCRIBED, granted: {...granted[0], converter: action.setting.subscribeTo.converter}})
           }
@@ -97,7 +106,7 @@ const mqttReducer = (state, action) => {
       return {...state, subscribedTo: action.granted};
     case ACTIONS.UNSUBSCRIBE:
       if(state.subscribedTo.topic){
-        state.setAlert(['info', `Unsubscribing from ${state.subscribedTo.topic}...`]);
+        state.setAlert(['info', 'MQTT_UNSUBSCRIBE', state.subscribedTo.topic]);
         state.mqtt.unsubscribe(state.subscribedTo.topic, (error) => {
           if(error){
             state.setAlert(['error', error]);
@@ -119,7 +128,7 @@ const mqttReducer = (state, action) => {
             if(error){
               state.setAlert(['error', error]);
             }else{
-              state.setAlert(['success', 'Published']);
+              state.setAlert(['success', 'MQTT_PUBLISHED']);
               state.clearAlert(1000);
             }
       })
@@ -129,20 +138,20 @@ const mqttReducer = (state, action) => {
       return {...state, error: action.error};
     case ACTIONS.UPDATE_STATUS:
     case ACTIONS.ON_CONNECT:
-      state.clearAlert();
       clearTimeout(connectTimeout);
-      /* falls through */
-    case ACTIONS.ON_RECONNECT:
+      setAlertTimeout(state, ['info', 'MQTT_ON_CONNECT']);
+      return {...state, status: action.status};
     case ACTIONS.ON_CLOSE:
+      setAlertTimeout(state, ['warning', 'MQTT_ON_CLOSE']);
+      return {...state, status: action.status};
+    case ACTIONS.ON_RECONNECT:
+      setAlertTimeout(state, ['warning', 'MQTT_ON_RECONNECT']);
+      return {...state, status: action.status};
     case ACTIONS.ON_OFFLINE:
+      setAlertTimeout(state, ['warning', 'MQTT_ON_OFFLINE']);
       return {...state, status: action.status};
     case ACTIONS.TOGGLE_PAUSE:
-      if(state.pause){
-        state.setAlert(['success', 'Updating messages.']);
-      }else{
-        state.setAlert(['info', 'Pause messages.']);
-      }
-      state.clearAlert(1000);
+      setAlertTimeout(state, state.pause ? ['success', 'MQTT_PLAY'] : ['info', 'MQTT_PAUSE']);
       return {...state, pause: !state.pause};
     default:
       return state;

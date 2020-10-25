@@ -42,7 +42,7 @@ export default function MqttSubscribeDialog(props) {
 
   const handleSubscribe = () => {
     if(!messageConverter[mqttSetting.subscribeTo.converter]){
-      setAlert(['error','Converter does not exist.']);
+      setAlert(['error','CONVERTER_INVALID']);
       return;
     }
     dispatch({type: 'subscribe', setting: mqttSetting});
@@ -59,7 +59,7 @@ export default function MqttSubscribeDialog(props) {
         ...mqttSetting.subscribeTo, 
         [prop]: typeof value === 'undefined' ? event.target.value : value}
     });
-    if(prop === 'converter' && !messageConverter[value]) setAlert(['error', 'Selected converter does not exist.'])
+    if(prop === 'converter' && !messageConverter[value]) setAlert(['error', 'CONVERTER_INVALID'])
   };
 
 
@@ -104,7 +104,7 @@ export default function MqttSubscribeDialog(props) {
           <Button 
             onClick={handleSubscribe} 
             color="primary" 
-            disabled={!messageConverter[mqttSetting.subscribeTo.converter] || !mqttSetting.subscribeTo.topic}
+            disabled={!messageConverter[mqttSetting.subscribeTo.converter] || !mqttSetting.subscribeTo.topic || Boolean(mqttState.subscribedTo.topic && mqttState.mqtt.connected)}
             variant={theme.palette.type === 'dark' ? 'contained' : 'text'}
           >
             {theme.i18n('MqttSubscribeDialog','subscribeBtn', defaultText)}

@@ -8,7 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableFooter from '@material-ui/core/TableFooter';
 import Paper from '@material-ui/core/Paper';
-import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
 import { AppSettingContext, MqttContext, MqttSettingContext } from 'hooks/context/Contexts';
 import ActionsRow from 'components/tables/ActionsRow';
 import MessageRow from 'components/tables/MessageRow';
@@ -19,11 +19,15 @@ const useRowStyles = makeStyles((theme) => ({
       paddingTop: theme.spacing(10),
       minHeight: '100vh',
       backgroundColor: theme.palette.background.default 
+  },
+  noMessage: {
+    textAlign: 'center'
   }
 }));
 
 const defaultText = {
-  rowsPerPage: 'rows per page'
+  rowsPerPage: 'rows per page',
+  noMessage: 'No message to display.'
 }
 
 export default function MessageTable() {
@@ -63,24 +67,29 @@ export default function MessageTable() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  return (
-    <Container maxWidth="xl" className={classes.container}>
+
+  const actionsRow = (
+    <ActionsRow
+      rowsPerPageOptions={pageOptions}
+      colSpan={colSpan}
+      count={filtered.length}
+      rowsPerPage={rowsPerPage}
+      page={page}
+      SelectProps={{
+        inputProps: { 'aria-label': theme.i18n('MessageTable','rowsPerPage', defaultText) },
+        native: true,
+      }}
+      onChangePage={handleChangePage}
+      onChangeRowsPerPage={handleChangeRowsPerPage}
+    />
+  );
+
+  return filtered?.length ? (
+    
       <TableContainer component={Paper}>
         <Table size="small" aria-label="collapsible table">
           <TableHead>
-            <ActionsRow
-              rowsPerPageOptions={pageOptions}
-              colSpan={colSpan}
-              count={mqttState.messages.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: { 'aria-label': theme.i18n('MessageTable','rowsPerPage', defaultText) },
-                native: true,
-              }}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
+            {actionsRow}
           </TableHead>
           <TableHead>
             <TableRow>
@@ -102,22 +111,15 @@ export default function MessageTable() {
           ))}
           </TableBody>
           <TableFooter>
-            <ActionsRow
-              rowsPerPageOptions={pageOptions}
-              colSpan={colSpan}
-              count={mqttState.messages.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: { 'aria-label': theme.i18n('MessageTable','rowsPerPage', defaultText) },
-                native: true,
-              }}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
+            {actionsRow}
           </TableFooter>
         </Table>
       </TableContainer>
-    </Container>
+  ) : (
+    <Paper elevation={3}> 
+      <Typography variant="h4" className={classes.noMessage}>
+        {theme.i18n('MessageTable','noMessage', defaultText)}
+      </Typography> 
+    </Paper>
   );
 }

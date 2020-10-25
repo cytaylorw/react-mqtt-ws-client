@@ -20,16 +20,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AlertMessage() {
   const classes = useStyles();
-  const [alert, setAlert] = React.useContext(AlertContext);
+  const [alert, , clearAlert] = React.useContext(AlertContext);
   const handleClose = () => {
-    setAlert([])
+    clearAlert()
   }
 
   return (
     <div className={classes.root}>
       {alert.length > 1 ? 
         <Alert severity={alert[0]} onClose={handleClose} className={classes.alert}>
-          {typeof alert[1] === 'object' && alert[1] !== null && alert[1].message ? alert[1].message : JSON.stringify(alert[1])}
+          {alert[1]?.message ?? alert[1]}
         </Alert>
       : null}
     </div>

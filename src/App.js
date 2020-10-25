@@ -1,12 +1,23 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import './App.css';
 import NavBar from 'components/NavBar';
 import MessageTable from 'components/tables/MessageTable';
 import ConfigActions from 'components/ConfigActions';
 import AlertMessage from 'components/AlertMessage';
 import DialogWrapper from 'components/dialogs/DialogWrapper';
+import Container from '@material-ui/core/Container';
+
+const useRowStyles = makeStyles((theme) => ({
+  container: {
+      paddingTop: theme.spacing(10),
+      minHeight: '100vh',
+      backgroundColor: theme.palette.background.default 
+  }
+}));
 
 function App() {
+  const classes = useRowStyles();
   const [hideActionBtn, setHideActionBtn] = React.useState(false);
   const [openConnectDialog, setOpenConnectDialog] = React.useState(false);
   const [openSubscribeDialog, setOpenSubscribeDialog] = React.useState(false);
@@ -30,12 +41,14 @@ function App() {
         hidden={hideActionBtn}
         onChange={setHideActionBtn}
       />
-      <MessageTable></MessageTable>
+      <Container maxWidth="xl" className={classes.container}>
+        <MessageTable/>
+      </Container>
       <ConfigActions
         hidden={hideActionBtn}
         onClick={setOpenDialog}
       />
-      <AlertMessage></AlertMessage>
+      <AlertMessage/>
       <DialogWrapper 
         open={{openConnectDialog, openSubscribeDialog, openPublishDialog, openSettingsDialog}}
         openDialogs={openDialogs}
