@@ -59,7 +59,7 @@ export default function MqttSubscribeDialog(props) {
         ...mqttSetting.subscribeTo, 
         [prop]: typeof value === 'undefined' ? event.target.value : value}
     });
-    if(prop === 'converter' && !messageConverter[value]) setAlert(['error', 'CONVERTER_INVALID'])
+    if(prop === 'converter' && !messageConverter[event.target.value]) setAlert(['error', 'CONVERTER_INVALID'])
   };
 
 
