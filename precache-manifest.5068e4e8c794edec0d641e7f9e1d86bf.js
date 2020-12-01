@@ -1,14 +1,14 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "5613e874a57a45802b55e185baa12fed",
+    "revision": "024de75fa476461af88b33b75faaf99e",
     "url": "/react-mqtt-ws-client/index.html"
   },
   {
-    "revision": "61e77ade89c47a85bc28",
+    "revision": "5966bd8408f17fbc712e",
     "url": "/react-mqtt-ws-client/static/css/4.90b30399.chunk.css"
   },
   {
-    "revision": "c31a7f6b9993f1250c00",
+    "revision": "686b274b228b9583c457",
     "url": "/react-mqtt-ws-client/static/css/main.a07f0b12.chunk.css"
   },
   {
@@ -28,15 +28,15 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/react-mqtt-ws-client/static/js/3.e219e602.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "61e77ade89c47a85bc28",
-    "url": "/react-mqtt-ws-client/static/js/4.9dcc15c4.chunk.js"
+    "revision": "5966bd8408f17fbc712e",
+    "url": "/react-mqtt-ws-client/static/js/4.134ebd9c.chunk.js"
   },
   {
-    "revision": "c31a7f6b9993f1250c00",
-    "url": "/react-mqtt-ws-client/static/js/main.81987ab0.chunk.js"
+    "revision": "686b274b228b9583c457",
+    "url": "/react-mqtt-ws-client/static/js/main.99190f47.chunk.js"
   },
   {
-    "revision": "d592b071f98fceb34043",
-    "url": "/react-mqtt-ws-client/static/js/runtime-main.e6ceefec.js"
+    "revision": "3f720903969d04cd3ec1",
+    "url": "/react-mqtt-ws-client/static/js/runtime-main.29839dd0.js"
   }
 ]);
