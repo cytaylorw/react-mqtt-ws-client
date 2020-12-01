@@ -12,6 +12,7 @@ const useRowStyles = makeStyles((theme) => ({
   container: {
       paddingTop: theme.spacing(10),
       minHeight: '100vh',
+      maxWidth: '100%',
       backgroundColor: theme.palette.background.default 
   }
 }));
@@ -41,7 +42,9 @@ function App() {
         hidden={hideActionBtn}
         onChange={setHideActionBtn}
       />
-      <Container maxWidth="xl" className={classes.container}>
+      <Container 
+        className={classes.container}
+      >
         <MessageTable/>
       </Container>
       <ConfigActions
