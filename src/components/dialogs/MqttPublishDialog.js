@@ -62,11 +62,11 @@ export default function MqttPublishDialog(props) {
         <>
           <TopicTextField
             onChange={handleTopicChange('topic')}
-            value={mqttSetting.subscribeTo.topic}
-            error={!mqttSetting.subscribeTo.topic}
+            value={mqttSetting.publishTo.topic}
+            error={!mqttSetting.publishTo.topic}
           />
           <QosSlider
-            value={mqttSetting.subscribeTo.qos}
+            value={mqttSetting.publishTo.qos}
             onChange={handleTopicChange('qos')}
           />
           <InputLabel className={classes.margin}  error={!mqttSetting.publishTo.message}>{theme.i18n('MqttPublishDialog','messageLabel', defaultText)}</InputLabel>
